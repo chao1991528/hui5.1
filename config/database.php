@@ -8,20 +8,21 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
+use think\facade\Env;
 
 return [
     // 数据库类型
     'type'            => 'mysql',
     // 服务器地址
-    'hostname'        => '127.0.0.1',
+    'hostname'        => Env::get('database.hostname', '127.0.0.1'),
     // 数据库名
-    'database'        => '',
+    'database'        => Env::get('database.database', 'kaola_news'),
     // 用户名
-    'username'        => 'root',
+    'username'        => Env::get('database.username', 'kaola_news'),
     // 密码
-    'password'        => '',
+    'password'        => Env::get('database.password', 'hrKx2hrmaGNRSXrf'),
     // 端口
-    'hostport'        => '',
+    'hostport'        => Env::get('database.hostport', '3306'),
     // 连接dsn
     'dsn'             => '',
     // 数据库连接参数
@@ -29,7 +30,7 @@ return [
     // 数据库编码默认采用utf8
     'charset'         => 'utf8',
     // 数据库表前缀
-    'prefix'          => '',
+    'prefix'          => Env::get('database.prefix', 'kl_'),
     // 数据库调试模式
     'debug'           => true,
     // 数据库部署方式:0 集中式(单一服务器),1 分布式(主从服务器)
