@@ -1,0 +1,348 @@
+{extend name="base" /}
+{block name="title"}编辑二手信息{/block}
+{block name="main"}
+<div class="pd-10">
+    <form action="" method="post" class="form form-horizontal" enctype="multipart/form-data"  id="form-admin-add" >
+        <table class="table table-border table-bordered table-bg" style="width: 100%; margin: auto;">
+            <thead>
+            <tr class="text-c">
+                <th scope="col" colspan="6" style="font-size: 14px;">编辑二手信息</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="text-c">
+                <td width="150" class="title">会员ID：</td>
+                <td width="120"><input type="text" class="input-text" value="<{$info.mem_id}>" name="mem_id" id="mem_id"></td>
+                <td class="title">会员昵称：</td>
+                <td class="nick_name_td"><{$info.mem_id}></td>
+                <td class="title">价格：</td>
+                <td><input type="text" class="input-text" value="<{$info.price}>" name="price"></td>
+            </tr>
+            <tr class="text-c">
+                <td width="120" class="title">标题：</td>
+                <td colspan="5"><input type="text" class="input-text" value="<{$info.title}>" placeholder="请输入标题" name="title" nullmsg="密码不能为空"></td>
+            </tr>
+            <tr class="text-c">
+                <td width="120" class="title">所属城市：</td>
+                <td width="130">
+                    <select class="select" name="city_id">
+                        <option value="">请选择城市</option>
+                        {volist name="$citys" id="vo"}
+                            <option value="{$vo.id}" {if $info.city_id == $vo.id}selected="selected"{/if}>{$vo.name}</option>
+                        {/volist}
+                    </select>
+                </td>
+                <td width="120" class="title">所属区域：</td>
+                <td width="120">
+                    <select class="select" name="district_id">
+                        {volist name="districts" id="vo"}
+                            <option value="{$vo.id}" {if $info.district_id == $vo.id}selected="selected"{/if}>{$vo.name}</option>
+                        {/volist}
+                    </select>
+                </td>
+                <td width="80" class="title">所属分类：</td>
+                <td width="130">
+                    <select class="select" name="category_id">
+                        {volist name="categories" id="vo">
+                            <option value="{$vo.id}" {if $info.category_id == $vo.id}selected="selected"{/if}>{$vo.category_name}</option>
+                        {/volist}
+                    </select>
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td width="120" class="title">所属圈子：</td>
+                <td width="150">
+                    <select class="select" name="quanzi_id">
+                        {volist name="quanzi" id="vo"}
+                            <option value="{$vo.id}" {if $info.quanzi_id == $vo.id}selected="selected"{/if}>{$vo.quanzi_name}</option>
+                        {/volist}
+                    </select>
+                </td>
+                <td width="120" class="title">交易性质：</td>
+                <td width="150">
+                    <select class="select" name="property">
+                        {volist name="property" id="vo"}
+                            <option value="{$key}" {if $info.property == $key}selected="selected"{/if}>{$vo}</option>
+                        {/volist}
+                    </select>
+                </td>
+                <td width="120" class="title">新旧程度：</td>
+                <td width="150">
+                    <select class="select" name="oldnew">
+                        {volist name="oldnew" id="vo"}
+                            <option value="{$key}" {if $info.oldnew == $key}selected="selected"{/if}>{$vo}</option>
+                        {/volist}
+                    </select>
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td width="120" class="title">保修期内：</td>
+                <td width="150">
+                    <select class="select" name="guarantee">
+                        {volist name="guarantee" id="vo"}
+                            <option value="{$key}" {if $info.guarantee == $key}selected="selected"{/if}>{$vo}</option>
+                        {/volist}
+                    </select>
+                </td>
+                <td width="120" class="title">交易区域：</td>
+                <td width="150">
+                    <select class="select" name="deal_area">
+                        {volist name="dealArea" id="vo"}
+                            <option value="{$key}" {if $info.deal_area == $key}selected="selected"{/if}>{$vo}</option>
+                        {/volist}
+                    </select>
+                </td>
+                <td width="120" class="title">是否送货：</td>
+                <td width="150">
+                    <select class="select" name="delivery">
+                        {volist name="delivery" id="vo"}
+                            <option value="{$key}" {if $info.delivery == $key}selected="selected"{/if}>{$vo}</option>
+                        {/volist}
+                    </select>
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td width="120" class="title">联系人：</td>
+                <td width="130">
+                    <input type="text" class="input-text" value="<{$info.contact_person}>" placeholder="联系人" name="contact_person" >
+                </td>
+                <td width="120" class="title">手机号：</td>
+                <td width="130">
+                    <input type="text" class="input-text" value="<{$info.mobile}>" placeholder=手机号 name="mobile" >
+                </td>
+                <td width="120" class="title">微信号：</td>
+                <td width="130">
+                    <input type="text" class="input-text" value="<{$info.weixin_no}>" placeholder="微信号" name="weixin_no" >
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td width="120" class="title">邮箱：</td>
+                <td width="130" colspan="5">
+                    <input type="text" class="input-text" value="<{$info.email}>" placeholder="邮箱" name="email" >
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td width="120" class="title">标签：</td>
+                <td width="130" colspan="5" style="text-align:left;">
+                    <volist name="tag_mapping" id="item">
+                        <input type="checkbox" name="tag_ids[]" value="<{$key}>" class="check-box" <in name='key' value="$info['tag_ids']">checked="checked"</in>>
+                        <{$item}>&nbsp;&nbsp;
+                    </volist>
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td class="title">是否置顶：</td>
+                <td style="text-align:left;line-height: 34px;" colspan="5">
+                    <input type="radio" name="is_top" value="0" checked="checked" />&nbsp;&nbsp;否&nbsp;&nbsp;
+                    <input type="radio" name="is_top" value="1" />&nbsp;&nbsp;是&nbsp;&nbsp;
+                    <input type="text" name="top_end_date" style="width: 60%;display:none" class="input-text Wdate" placeholder="置顶到期时间" value="" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss' })"/>
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td class="title">标题图片：</td>
+                <td colspan="5" height="100">
+                    <div class="uploader-thum-container" style="">
+                        <div id="imgDiv" style="">
+                            <volist name="images_list" id="item" >
+                                <div style="float:left;width:33%;"><img src="<{$item}>" style="width: 82%;margin-bottom: 5px;" /><button class="btn btn-default radius ml-10" onclick="removeFile(this)">删除</button></div>
+                            </volist>
+                        </div>
+                        <div id="fileList" class="uploader-list"></div>
+                        <br/>
+                        <div id="filePicker">选择图片</div>
+                        <div style="float: left;width: 100%;color: #cdcdcd;text-align: left;">请根据布局上传对应数量图片，最多上传三张图片<br>建议尺寸：（一小图）115*86，（一大图）345*194，（三小图）110*60</div>
+
+                    </div>
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td class="title">内容：</td>
+                <td colspan="5" height="100">
+                    <textarea cols="100" rows="5" name="content"><{$info.content}></textarea>
+                </td>
+            </tr>
+            <tr class="text-c" >
+                <td colspan="6">
+                    <input type="hidden" id="images" name="images" value="<{$info.images}>" />
+                    <input type="hidden" name="id" value="<{$info.id}>" />
+                    <input type="submit" id="submit-btn" value="提交" class="btn btn-primary radius" style="width:35%;">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </form>
+</div>
+{/block}
+{block name="js"}
+<script type="text/javascript" src="/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="/lib/webuploader/0.1.5/webuploader.min.js"></script>
+<script type="text/javascript" src="/lib/ueditor/1.4.3/ueditor.config.js"></script>
+<script type="text/javascript" src="/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
+<script type="text/javascript" src="/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $('.skin-minimal input').iCheck({
+            checkboxClass: 'icheckbox-blue',
+            radioClass: 'iradio-blue',
+            increaseArea: '20%'
+        });
+
+        //表单验证
+        $("#form-article-add").validate({
+            rules:{
+                articletitle:{
+                    required:true,
+                },
+                articletitle2:{
+                    required:true,
+                },
+                articlecolumn:{
+                    required:true,
+                },
+                articletype:{
+                    required:true,
+                },
+                articlesort:{
+                    required:true,
+                },
+                keywords:{
+                    required:true,
+                },
+                abstract:{
+                    required:true,
+                },
+                author:{
+                    required:true,
+                },
+                sources:{
+                    required:true,
+                },
+                allowcomments:{
+                    required:true,
+                },
+                commentdatemin:{
+                    required:true,
+                },
+                commentdatemax:{
+                    required:true,
+                },
+
+            },
+            onkeyup:false,
+            focusCleanup:true,
+            success:"valid",
+            submitHandler:function(form){
+                //$(form).ajaxSubmit();
+                var index = parent.layer.getFrameIndex(window.name);
+                //parent.$('.btn-refresh').click();
+                parent.layer.close(index);
+            }
+        });
+
+        $list = $("#fileList"),
+            $btn = $("#btn-star"),
+            state = "pending",
+            uploader;
+
+        var uploader = WebUploader.create({
+            auto: true,
+            swf: 'lib/webuploader/0.1.5/Uploader.swf',
+
+            // 文件接收服务端。
+            server: 'fileupload.php',
+
+            // 选择文件的按钮。可选。
+            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+            pick: '#filePicker',
+
+            // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+            resize: false,
+            // 只允许选择图片文件。
+            accept: {
+                title: 'Images',
+                extensions: 'gif,jpg,jpeg,bmp,png',
+                mimeTypes: 'image/*'
+            }
+        });
+        uploader.on( 'fileQueued', function( file ) {
+            var $li = $(
+                '<div id="' + file.id + '" class="item">' +
+                '<div class="pic-box"><img></div>'+
+                '<div class="info">' + file.name + '</div>' +
+                '<p class="state">等待上传...</p>'+
+                '</div>'
+                ),
+                $img = $li.find('img');
+            $list.append( $li );
+
+            // 创建缩略图
+            // 如果为非图片文件，可以不用调用此方法。
+            // thumbnailWidth x thumbnailHeight 为 100 x 100
+            uploader.makeThumb( file, function( error, src ) {
+                if ( error ) {
+                    $img.replaceWith('<span>不能预览</span>');
+                    return;
+                }
+
+                $img.attr( 'src', src );
+            }, thumbnailWidth, thumbnailHeight );
+        });
+        // 文件上传过程中创建进度条实时显示。
+        uploader.on( 'uploadProgress', function( file, percentage ) {
+            var $li = $( '#'+file.id ),
+                $percent = $li.find('.progress-box .sr-only');
+
+            // 避免重复创建
+            if ( !$percent.length ) {
+                $percent = $('<div class="progress-box"><span class="progress-bar radius"><span class="sr-only" style="width:0%"></span></span></div>').appendTo( $li ).find('.sr-only');
+            }
+            $li.find(".state").text("上传中");
+            $percent.css( 'width', percentage * 100 + '%' );
+        });
+
+        // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+        uploader.on( 'uploadSuccess', function( file ) {
+            $( '#'+file.id ).addClass('upload-state-success').find(".state").text("已上传");
+        });
+
+        // 文件上传失败，显示上传出错。
+        uploader.on( 'uploadError', function( file ) {
+            $( '#'+file.id ).addClass('upload-state-error').find(".state").text("上传出错");
+        });
+
+        // 完成上传完了，成功或者失败，先删除进度条。
+        uploader.on( 'uploadComplete', function( file ) {
+            $( '#'+file.id ).find('.progress-box').fadeOut();
+        });
+        uploader.on('all', function (type) {
+            if (type === 'startUpload') {
+                state = 'uploading';
+            } else if (type === 'stopUpload') {
+                state = 'paused';
+            } else if (type === 'uploadFinished') {
+                state = 'done';
+            }
+
+            if (state === 'uploading') {
+                $btn.text('暂停上传');
+            } else {
+                $btn.text('开始上传');
+            }
+        });
+
+        $btn.on('click', function () {
+            if (state === 'uploading') {
+                uploader.stop();
+            } else {
+                uploader.upload();
+            }
+        });
+
+        var ue = UE.getEditor('editor');
+
+    });
+</script>
+{/block}

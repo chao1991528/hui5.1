@@ -21,7 +21,7 @@ return [
     // 应用地址
     'app_host'               => '',
     // 应用调试模式
-    'app_debug'              => Env::get('app_debug', false),
+    'app_debug'              => Env::get('app.app_debug', false),
     // 应用Trace
     'app_trace'              => false,
     // 是否支持多模块
