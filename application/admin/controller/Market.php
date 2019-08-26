@@ -115,6 +115,8 @@ class Market extends Controller
             $delivery = MarketModel::getDeliveryList();
             $status = MarketModel::getStatusList();
             $isTop = MarketModel::getIsTopList();
+            $tags = model('MarketTag')->where(['is_valid' => 1, 'is_delete' => 0])->field('id,tag_name')->select();
+            $info->imageList = explode(',', $info->images);
             return $this->fetch('market/edit', [
                 'info' => $info,
                 'citys' => $citys,
@@ -127,7 +129,8 @@ class Market extends Controller
                 'dealArea' => $dealArea,
                 'delivery' => $delivery,
                 'status' => $status,
-                'isTop' => $isTop
+                'isTop' => $isTop,
+                'tags' => $tags
             ]);
         }
     }

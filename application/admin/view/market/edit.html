@@ -12,15 +12,15 @@
             <tbody>
             <tr class="text-c">
                 <td width="150" class="title">会员ID：</td>
-                <td width="120"><input type="text" class="input-text" value="<{$info.mem_id}>" name="mem_id" id="mem_id"></td>
+                <td width="120"><input type="text" class="input-text" value="{$info.mem_id}" name="mem_id" id="mem_id"></td>
                 <td class="title">会员昵称：</td>
-                <td class="nick_name_td"><{$info.mem_id}></td>
+                <td class="nick_name_td">{$info.member.nick_name}</td>
                 <td class="title">价格：</td>
-                <td><input type="text" class="input-text" value="<{$info.price}>" name="price"></td>
+                <td><input type="text" class="input-text" value="{$info.price}" name="price"></td>
             </tr>
             <tr class="text-c">
                 <td width="120" class="title">标题：</td>
-                <td colspan="5"><input type="text" class="input-text" value="<{$info.title}>" placeholder="请输入标题" name="title" nullmsg="密码不能为空"></td>
+                <td colspan="5"><input type="text" class="input-text" value="{$info.title}" placeholder="请输入标题" name="title" nullmsg="密码不能为空"></td>
             </tr>
             <tr class="text-c">
                 <td width="120" class="title">所属城市：</td>
@@ -43,8 +43,9 @@
                 <td width="80" class="title">所属分类：</td>
                 <td width="130">
                     <select class="select" name="category_id">
-                        {volist name="categories" id="vo">
-                            <option value="{$vo.id}" {if $info.category_id == $vo.id}selected="selected"{/if}>{$vo.category_name}</option>
+                        {volist name="categories" id="vo"}
+                            <option value="{$vo.id}" {if $info.category_id == $vo.id}selected="selected"{/if}>{$vo.category_name}
+                            </option>
                         {/volist}
                     </select>
                 </td>
@@ -104,30 +105,30 @@
             <tr class="text-c">
                 <td width="120" class="title">联系人：</td>
                 <td width="130">
-                    <input type="text" class="input-text" value="<{$info.contact_person}>" placeholder="联系人" name="contact_person" >
+                    <input type="text" class="input-text" value="{$info.contact_person}" placeholder="联系人" name="contact_person" >
                 </td>
                 <td width="120" class="title">手机号：</td>
                 <td width="130">
-                    <input type="text" class="input-text" value="<{$info.mobile}>" placeholder=手机号 name="mobile" >
+                    <input type="text" class="input-text" value="{$info.mobile}" placeholder=手机号 name="mobile" >
                 </td>
                 <td width="120" class="title">微信号：</td>
                 <td width="130">
-                    <input type="text" class="input-text" value="<{$info.weixin_no}>" placeholder="微信号" name="weixin_no" >
+                    <input type="text" class="input-text" value="{$info.weixin_no}" placeholder="微信号" name="weixin_no" >
                 </td>
             </tr>
             <tr class="text-c">
                 <td width="120" class="title">邮箱：</td>
                 <td width="130" colspan="5">
-                    <input type="text" class="input-text" value="<{$info.email}>" placeholder="邮箱" name="email" >
+                    <input type="text" class="input-text" value="{$info.email}" placeholder="邮箱" name="email" >
                 </td>
             </tr>
             <tr class="text-c">
                 <td width="120" class="title">标签：</td>
                 <td width="130" colspan="5" style="text-align:left;">
-                    <volist name="tag_mapping" id="item">
-                        <input type="checkbox" name="tag_ids[]" value="<{$key}>" class="check-box" <in name='key' value="$info['tag_ids']">checked="checked"</in>>
-                        <{$item}>&nbsp;&nbsp;
-                    </volist>
+                    {volist name="tags" id="vo"}
+                        <input type="checkbox" name="tag_ids[]" value="{$vo.id}" class="check-box" {in name='vo.id' value="$info['tag_ids']"}checked="checked"{/in}>
+                        {$vo.tag_name}&nbsp;&nbsp;
+                    {/volist}
                 </td>
             </tr>
             <tr class="text-c">
@@ -143,28 +144,26 @@
                 <td colspan="5" height="100">
                     <div class="uploader-thum-container" style="">
                         <div id="imgDiv" style="">
-                            <volist name="images_list" id="item" >
-                                <div style="float:left;width:33%;"><img src="<{$item}>" style="width: 82%;margin-bottom: 5px;" /><button class="btn btn-default radius ml-10" onclick="removeFile(this)">删除</button></div>
-                            </volist>
+                            {volist name="info.imageList" id="vo"}
+                                <div style="float:left;width:33%;"><img src="{$vo}" style="width: 82%;margin-bottom: 5px;" /><button class="btn btn-default radius ml-10" onclick="removeFile(this)">删除</button></div>
+                            {/volist}
                         </div>
                         <div id="fileList" class="uploader-list"></div>
                         <br/>
                         <div id="filePicker">选择图片</div>
                         <div style="float: left;width: 100%;color: #cdcdcd;text-align: left;">请根据布局上传对应数量图片，最多上传三张图片<br>建议尺寸：（一小图）115*86，（一大图）345*194，（三小图）110*60</div>
-
                     </div>
                 </td>
             </tr>
             <tr class="text-c">
                 <td class="title">内容：</td>
                 <td colspan="5" height="100">
-                    <textarea cols="100" rows="5" name="content"><{$info.content}></textarea>
+                    <textarea cols="100" rows="5" name="content">{$info.content}</textarea>
                 </td>
             </tr>
             <tr class="text-c" >
                 <td colspan="6">
-                    <input type="hidden" id="images" name="images" value="<{$info.images}>" />
-                    <input type="hidden" name="id" value="<{$info.id}>" />
+                    <input type="hidden" id="images" name="images" value="{$info.images}" />
                     <input type="submit" id="submit-btn" value="提交" class="btn btn-primary radius" style="width:35%;">
                 </td>
             </tr>
