@@ -1,8 +1,15 @@
 {extend name="base" /}
+{block name="css"}
+<link rel="stylesheet" type="text/css" href="/lib/webuploader/0.1.5/webuploader.css">
+<style>
+    .table .title{background-color: #f5fafe;font-size: 12px;vertical-align: middle;}
+    .input-text,.select {font-size: 12px;}
+</style>
+{/block}
 {block name="title"}编辑二手信息{/block}
 {block name="main"}
 <div class="pd-10">
-    <form action="" method="post" class="form form-horizontal" enctype="multipart/form-data"  id="form-admin-add" >
+    <form action="" method="post" class="form form-horizontal" enctype="multipart/form-data"  id="edit" >
         <table class="table table-border table-bordered table-bg" style="width: 100%; margin: auto;">
             <thead>
             <tr class="text-c">
@@ -134,9 +141,9 @@
             <tr class="text-c">
                 <td class="title">是否置顶：</td>
                 <td style="text-align:left;line-height: 34px;" colspan="5">
-                    <input type="radio" name="is_top" value="0" checked="checked" />&nbsp;&nbsp;否&nbsp;&nbsp;
-                    <input type="radio" name="is_top" value="1" />&nbsp;&nbsp;是&nbsp;&nbsp;
-                    <input type="text" name="top_end_date" style="width: 60%;display:none" class="input-text Wdate" placeholder="置顶到期时间" value="" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss' })"/>
+                    <input type="radio" name="is_top" value="0" {if $info.is_top == 0}checked="checked"{/if}/>&nbsp;&nbsp;否&nbsp;&nbsp;
+                    <input type="radio" name="is_top" value="1" {if $info.is_top == 1}checked="checked"{/if}/>&nbsp;&nbsp;是&nbsp;&nbsp;
+                    <input type="text" name="top_end_date" style="width: 60%;{if $info.is_top == 0}display:none{/if}" class="input-text datepicker" placeholder="置顶到期时间" value="{$info.top_end_date_text}" autocomplete="off"/>
                 </td>
             </tr>
             <tr class="text-c">
@@ -145,20 +152,22 @@
                     <div class="uploader-thum-container" style="">
                         <div id="imgDiv" style="">
                             {volist name="info.imageList" id="vo"}
-                                <div style="float:left;width:33%;"><img src="{$vo}" style="width: 82%;margin-bottom: 5px;" /><button class="btn btn-default radius ml-10" onclick="removeFile(this)">删除</button></div>
+                                <div style="float:left;width:33%;"><img src="{$vo}" style="width: 82%;margin-bottom: 5px;" />
+                                    <button class="btn btn-default radius ml-10" type="button" onclick="removeFile(this)">删除</button>
+                                </div>
                             {/volist}
                         </div>
                         <div id="fileList" class="uploader-list"></div>
                         <br/>
-                        <div id="filePicker">选择图片</div>
-                        <div style="float: left;width: 100%;color: #cdcdcd;text-align: left;">请根据布局上传对应数量图片，最多上传三张图片<br>建议尺寸：（一小图）115*86，（一大图）345*194，（三小图）110*60</div>
+                        <div id="filePicker" style="display:block;">选择图片</div>
+                        <div style="float: left;width: 100%;color: #cdcdcd;text-align: left;">最多上传三张图片</div>
                     </div>
                 </td>
             </tr>
             <tr class="text-c">
                 <td class="title">内容：</td>
                 <td colspan="5" height="100">
-                    <textarea cols="100" rows="5" name="content">{$info.content}</textarea>
+                    <textarea cols="100" rows="5" name="content" class="textarea">{$info.content}</textarea>
                 </td>
             </tr>
             <tr class="text-c" >
@@ -178,85 +187,81 @@
 <script type="text/javascript" src="/lib/jquery.validation/1.14.0/validate-methods.js"></script>
 <script type="text/javascript" src="/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 <script type="text/javascript" src="/lib/webuploader/0.1.5/webuploader.min.js"></script>
-<script type="text/javascript" src="/lib/ueditor/1.4.3/ueditor.config.js"></script>
-<script type="text/javascript" src="/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
-<script type="text/javascript" src="/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+<!--<script type="text/javascript" src="/lib/ueditor/1.4.3/ueditor.config.js"></script>-->
+<!--<script type="text/javascript" src="/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>-->
+<!--<script type="text/javascript" src="/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>-->
 <script type="text/javascript">
+
+    function removeFile(obj){
+        $(obj).parent().remove();
+        var image_arr = [];
+        $('#imgDiv img').each(function(i){
+            image_arr.push($(this).attr('src'));
+        });
+        $('#images').val(image_arr.join(','));
+    }
+
     $(function(){
         $('.skin-minimal input').iCheck({
             checkboxClass: 'icheckbox-blue',
             radioClass: 'iradio-blue',
             increaseArea: '20%'
         });
-
         //表单验证
-        $("#form-article-add").validate({
+        $("#edit").validate({
             rules:{
-                articletitle:{
+                mem_id:{
                     required:true,
                 },
-                articletitle2:{
+                title:{
                     required:true,
                 },
-                articlecolumn:{
+                city_id:{
                     required:true,
                 },
-                articletype:{
+                district_id:{
                     required:true,
                 },
-                articlesort:{
+                contact_person:{
                     required:true,
                 },
-                keywords:{
+                content:{
                     required:true,
-                },
-                abstract:{
-                    required:true,
-                },
-                author:{
-                    required:true,
-                },
-                sources:{
-                    required:true,
-                },
-                allowcomments:{
-                    required:true,
-                },
-                commentdatemin:{
-                    required:true,
-                },
-                commentdatemax:{
-                    required:true,
-                },
-
+                }
             },
             onkeyup:false,
             focusCleanup:true,
             success:"valid",
             submitHandler:function(form){
-                //$(form).ajaxSubmit();
-                var index = parent.layer.getFrameIndex(window.name);
-                //parent.$('.btn-refresh').click();
-                parent.layer.close(index);
+                $(form).ajaxSubmit(function (res) {
+                    if(res.status == 'y'){
+                        setTimeout(function(){
+                            parent.window.location.reload();
+                        },1000);
+                    }else{
+                        layer.msg(res.info);
+                    }
+                });
             }
         });
 
-        $list = $("#fileList"),
-            $btn = $("#btn-star"),
-            state = "pending",
-            uploader;
+        var $list = $("#fileList");
+        var state = "pending";
+        var fileIds = [];
 
         var uploader = WebUploader.create({
             auto: true,
-            swf: 'lib/webuploader/0.1.5/Uploader.swf',
+            swf: '/lib/webuploader/0.1.5/Uploader.swf',
 
             // 文件接收服务端。
-            server: 'fileupload.php',
+            server: "{:url('ajax/upload', ['model'=>'maket','thumb'=>1,'thumb_width1'=>200,'thumb_height1'=>200,'thumb_width2'=>750,'thumb_height2'=>750,'water'=>1])}",
 
             // 选择文件的按钮。可选。
             // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-            pick: '#filePicker',
-
+            pick: {
+                id:'#filePicker',
+                multiple:false
+            },
             // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
             resize: false,
             // 只允许选择图片文件。
@@ -276,20 +281,8 @@
                 ),
                 $img = $li.find('img');
             $list.append( $li );
-
-            // 创建缩略图
-            // 如果为非图片文件，可以不用调用此方法。
-            // thumbnailWidth x thumbnailHeight 为 100 x 100
-            uploader.makeThumb( file, function( error, src ) {
-                if ( error ) {
-                    $img.replaceWith('<span>不能预览</span>');
-                    return;
-                }
-
-                $img.attr( 'src', src );
-            }, thumbnailWidth, thumbnailHeight );
         });
-        // 文件上传过程中创建进度条实时显示。
+        // // 文件上传过程中创建进度条实时显示。
         uploader.on( 'uploadProgress', function( file, percentage ) {
             var $li = $( '#'+file.id ),
                 $percent = $li.find('.progress-box .sr-only');
@@ -298,50 +291,133 @@
             if ( !$percent.length ) {
                 $percent = $('<div class="progress-box"><span class="progress-bar radius"><span class="sr-only" style="width:0%"></span></span></div>').appendTo( $li ).find('.sr-only');
             }
-            $li.find(".state").text("上传中");
+            // $li.find(".state").text("上传中");
             $percent.css( 'width', percentage * 100 + '%' );
         });
-
+        //
         // 文件上传成功，给item添加成功class, 用样式标记上传成功。
-        uploader.on( 'uploadSuccess', function( file ) {
-            $( '#'+file.id ).addClass('upload-state-success').find(".state").text("已上传");
+        uploader.on( 'uploadSuccess', function( file, response ) {
+            fileIds.push(file.id);
+            if(response.code == 1){
+                //$("#filename").val(response.filename);
+                layer.msg(response.info,{icon: 6,time:1000}, function(){
+                    //window.location.reload();
+                    var oldVal = $('#images').val();
+                    var newVal = oldVal ?  (oldVal + "," + response.filename) : response.filename;
+                    $('#images').val(newVal);
+                    $('#imgDiv').html($('#imgDiv').html() + '<div style="float:left;width:33%;"><img src="'+response.filename+'" style="width: 82%;margin-bottom: 5px;" /><br><button class="btn btn-default radius ml-10" type="button" onclick="removeFile(this)">删除</button></div>');
+                });
+                for(var i in fileIds){
+                    uploader.removeFile( fileIds[i],true );
+                    $("#"+fileIds[i]).remove();
+                    fileIds.pop();
+                }
+            }
+            else {
+                layer.msg(response.info,{icon: 5,time:1000});
+            }
+            // $( '#'+file.id ).addClass('upload-state-success').find(".state").text("已上传");
         });
-
+        //
         // 文件上传失败，显示上传出错。
         uploader.on( 'uploadError', function( file ) {
             $( '#'+file.id ).addClass('upload-state-error').find(".state").text("上传出错");
         });
-
+        //
         // 完成上传完了，成功或者失败，先删除进度条。
         uploader.on( 'uploadComplete', function( file ) {
             $( '#'+file.id ).find('.progress-box').fadeOut();
+            $( '#'+file.id ).find('.state').fadeOut();
         });
-        uploader.on('all', function (type) {
-            if (type === 'startUpload') {
-                state = 'uploading';
-            } else if (type === 'stopUpload') {
-                state = 'paused';
-            } else if (type === 'uploadFinished') {
-                state = 'done';
-            }
+        //城市切换
+        $("select[name='city_id']").change(function(){
+            var city_id = $(this).val();
+            var categorySelect = $("select[name='category_id']");
+            var districtSelect = $("select[name='district_id']");
+            var quanziSelect = $("select[name='quanzi_id']");
+            $.ajax({
+                url: '{:url("ajax/marketChangeCity")}',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    'city_id': city_id
+                },
+                success: function (data) {
+                    if (data.status == 'y') {
+                        if (data.info) {
+                            categorySelect.empty();
+                            var option = '';
+                            $.each(data.info.categories, function(i, item){
+                                option += '<option value="' + item.id + '">' + item.category_name + '</option>';
+                            });
+                            option = option ? option : '<option value="">该城市无二手分类</option>';
+                            categorySelect.html(option);
 
-            if (state === 'uploading') {
-                $btn.text('暂停上传');
+                            var option = '';
+                            $.each(data.info.districts, function(i, item){
+                                option += '<option value="' + item.id + '">' + item.name + '</option>';
+                            });
+                            option = option ? option : '<option value="">该城市无下级区域</option>';
+                            districtSelect.html(option);
+
+                            var option = '';
+                            $.each(data.info.quanzi, function(i, item){
+                                option += '<option value="' + item.id + '">' + item.quanzi_name + '</option>';
+                            });
+                            option = option ? option : '<option value="">该城市无圈子</option>';
+                            quanziSelect.html(option);
+                        }
+                    } else {
+                        layer.msg('获取该城市的二手分类失败', {
+                            icon: 2,
+                            time: 1000
+                        });
+                    }
+                }
+            });
+        });
+        //会员切换
+        $('#mem_id').on('blur', function(){
+            if ($(this).val() == ''){
+                return;
+            }
+            var index = layer.load(1, {
+                shade: [0.1,'#b3b3b3'] //0.1透明度的白色背景
+            });
+            $.ajax({
+                url:'{:url("ajax/getMemberNickname")}',
+                type:'get',
+                dataType:'json',
+                data:{'mem_id':$('#mem_id').val()},
+                success:function(data){
+                    layer.close(index);
+                    if(data.status == 'y'){
+                        if (data.info){
+                            $('.nick_name_td').html(data.info.nick_name);
+                        }
+                        else {
+                            $('.nick_name_td').html('未查找到会员');
+                        }
+                    }else{
+                        layer.msg('连接服务器超时',{icon:2,time:1000});
+                    }
+                }
+            });
+        });
+        //是否置顶切换
+        $('input[name=is_top]').on('click', function () {
+            if (this.value == 1) {
+                $('input[name=top_end_date]').show();
             } else {
-                $btn.text('开始上传');
+                $('input[name=top_end_date]').hide();
+                $('input[name=top_end_date]').val('');
             }
         });
-
-        $btn.on('click', function () {
-            if (state === 'uploading') {
-                uploader.stop();
-            } else {
-                uploader.upload();
-            }
+        $(".datepicker").datetimepicker({
+            language: "zh-cn",
+            format: "yyyy-mm-dd hh:ii",
+            autoclose: true
         });
-
-        var ue = UE.getEditor('editor');
-
     });
 </script>
 {/block}

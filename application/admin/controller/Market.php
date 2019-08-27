@@ -2,11 +2,9 @@
 
 namespace app\admin\controller;
 
-use think\Controller;
-use think\Request;
 use app\admin\model\Market as MarketModel;
 
-class Market extends Controller
+class Market extends Base
 {
     /**
      * 显示资源列表
@@ -16,92 +14,75 @@ class Market extends Controller
     public function index()
     {
         $list = MarketModel::with([
-            'member' => function($query){
+            'member' => function ($query) {
                 $query->field('id,nick_name');
             },
-            'city' => function($query){
+            'city' => function ($query) {
                 $query->field('id,name_zh');
             },
-            'category' => function($query){
+            'category' => function ($query) {
                 $query->field('id,category_name');
             },
-            'quanzi' => function($query){
+            'quanzi' => function ($query) {
                 $query->field('id,quanzi_name');
             },
-            'kaolaAdmin' => function($query){
+            'kaolaAdmin' => function ($query) {
                 $query->field('id,user_number');
             }
-        ])->where('is_delete', 0)->paginate(1);
-//        halt($list);
+        ])->where('is_delete', 0)->paginate(10);
         $this->assign([
-            'total'  => $list->total(),
+            'total' => $list->total(),
             'list' => $list
         ]);
         return $this->fetch();
     }
 
-    /**
-     * 显示创建资源表单页.
-     *
-     * @return \think\Response
-     */
-    public function create()
-    {
-        echo 222;die;
-    }
-
-    /**
-     * 保存新建的资源
-     *
-     * @param  \think\Request  $request
-     * @return \think\Response
-     */
-    public function save(Request $request)
-    {
-        //
-    }
-
-    /**
-     * 显示指定的资源
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function read($id)
-    {
-        //
-    }
 
     /**
      * 显示编辑资源表单页.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \think\Response
      */
     public function edit($id)
     {
-        if($this->request->isPost()){
-
-
+        if ($this->request->isPost()) {
+            $data = input('post.');
+            $result = $this->validate($data, 'app\admin\validate\Market');
+            if (true !== $result) {
+                // 验证失败 输出错误信息
+                return json(['info' => '修改失败:' . $result, 'status' => 'n']);
+            }
+            if (empty($data['mobile']) && empty($data['email']) && empty($data['weixin_no'])) {
+                return json(['info' => '修改失败:联系方式手机、微信、邮箱最少填写一个' . $result, 'status' => 'n']);
+            }
+            $market = MarketModel::where(['id' => $id, 'is_delete' => 0])->find();
+            if(!$market){
+                return json(['info' => '修改失败:二手资讯不存在！', 'status' => 'n']);
+            }
+            $data['tag_ids'] = !empty($data['tag_ids']) ? implode(',', $data['tag_ids']) : '';
+            $data['top_end_date'] = !empty($data['top_end_date']) ? strtotime($data['top_end_date']) : '';
+            $market->allowField(true)->save($data, ['id' => $id]);
+            return json(['info'=>'修改成功!','status'=>'y']);
         } else {
             $info = MarketModel::with([
-                'member' => function($query){
+                'member' => function ($query) {
                     $query->field('id,nick_name');
                 },
-                'city' => function($query){
+                'city' => function ($query) {
                     $query->field('id,name_zh');
                 },
-                'category' => function($query){
+                'category' => function ($query) {
                     $query->field('id,category_name');
                 },
-                'quanzi' => function($query){
+                'quanzi' => function ($query) {
                     $query->field('id,quanzi_name');
                 },
-                'kaolaAdmin' => function($query){
+                'kaolaAdmin' => function ($query) {
                     $query->field('id,user_number');
                 }
             ])->where(['id' => $id, 'is_delete' => 0])->find();
-            if(!$info){
+            if (!$info) {
                 $this->error('二手资讯不存在！');
             }
             $citys = model('City')->where('is_valid', 1)->field('id,name')->select();
@@ -136,25 +117,20 @@ class Market extends Controller
     }
 
     /**
-     * 保存更新的资源
-     *
-     * @param  \think\Request  $request
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
      * 删除指定资源
      *
-     * @param  int  $id
+     * @param int $id
      * @return \think\Response
      */
     public function delete($id)
     {
-        //
+        $market = MarketModel::where(['is_delete' => 0, 'id' => $id])->find();
+        if (!$market) {
+            $this->error('二手信息不存在，无法删除！');
+        }
+        $market->is_delete = 1;
+        $market->delete_time = time();
+        $market->save();
+        return json(['info' => '删除成功', 'status' => 'y']);
     }
 }

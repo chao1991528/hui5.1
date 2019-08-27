@@ -65,18 +65,23 @@ class Market extends Model
         ];
     }
 
-    public function getStatusTextAttr($value,$data)
+    public function getStatusTextAttr($value, $data)
     {
         $status = self::getStatusList();
         return !empty($status[$data['status']]) ? $status[$data['status']] : '-';
     }
 
-    public function getAddTimeTextAttr($value,$data)
+    public function getAddTimeTextAttr($value, $data)
     {
         return !empty($data['add_time']) ? date('Y-m-d H:i:s', $data['add_time']) : '-';
     }
 
-    public function getTopTimeTextAttr($value,$data)
+    public function getTopEndDateTextAttr($value, $data)
+    {
+        return !empty($data['top_end_date']) ? date('Y-m-d H:i:s', $data['top_end_date']) : '';
+    }
+
+    public function getTopTimeTextAttr($value, $data)
     {
         return !empty($data['update_time']) ? date('Y-m-d H:i:s', $data['update_time']) : '-';
     }
