@@ -61,4 +61,22 @@ return [
     'break_reconnect' => false,
     // 断线标识字符串
     'break_match_str' => [],
+
+    //考拉正式站数据库配置
+    'product_db' => [
+        // 数据库类型
+        'type'        => 'mysql',
+        // 服务器地址
+        'hostname'    => Env::get('product_db.hostname', '47.91.43.3'),
+        // 数据库名
+        'database'    => Env::get('product_db.database', 'kaola_news'),
+        // 数据库用户名
+        'username'    => Env::get('product_db.username', 'kaola_news'),
+        // 数据库密码
+        'password'    => Env::get('product_db.password', 'V*TjSXr#3*9t'),
+        // 数据库编码默认采用utf8
+        'charset'     => 'utf8',
+        // 数据库表前缀
+        'prefix'      => Env::get('product_db.prefix', 'kl_'),
+    ],
 ];

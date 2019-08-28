@@ -145,4 +145,5 @@ return [
     // 异常处理handle类 留空使用 \think\exception\Handle
     'exception_handle'       => '',
 
+    'image_domain'           => Env::get('app.image_domain', 'http://pool.kaolanews.com'),
 ];

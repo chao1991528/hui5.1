@@ -8,12 +8,12 @@
     }
 </style>
 {/block}
-{block name="title"}二手列表{/block}
+{block name="title"}生活列表{/block}
 {block name="main"}
 <nav class="breadcrumb">
     <i class="Hui-iconfont">&#xe67f;</i> 首页
-    <span class="c-gray en">&gt;</span> 二手管理
-    <span class="c-gray en">&gt;</span> 二手列表
+    <span class="c-gray en">&gt;</span> 生活管理
+    <span class="c-gray en">&gt;</span> 生活列表
     <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" >
         <i class="Hui-iconfont">&#xe68f;</i>
     </a>
@@ -72,7 +72,6 @@
                 <th width="80">标题</th>
                 <th width="80">所属城市</th>
                 <th width="80">所属分类</th>
-                <th width="80">所属圈子</th>
                 <th width="80">发布图片</th>
                 <th width="80">发布内容</th>
                 <th width="80">状态</th>
@@ -93,7 +92,6 @@
                     <td>{$vo.title}</td>
                     <td>{$vo.city.name_zh}</td>
                     <td>{$vo.category.category_name}</td>
-                    <td>{$vo.quanzi.quanzi_name}</td>
                     <td><a href="javascript:;" onclick="showImage('{$vo.title}', '{$vo.images}')">点击预览</a></td>
                     <td><a href="javascript:;" onclick="showContent('{$vo.title}', '{$vo.content}')">点击预览</a></td>
                     <td>{$vo.status_text}</td>
@@ -114,6 +112,9 @@
                         {/if}
                     </td>
                     <td class="f-14 td-manage">
+                        <a style="text-decoration:none" class="ml-5" onClick="uploadToProduct(this,'{$vo.id}')" href="javascript:;" title="上传">
+                            <i class="Hui-iconfont">&#xe603;</i>
+                        </a>
                         <a style="text-decoration:none" class="ml-5" onClick="admin_edit('编辑','{$vo.id}', 1000, 800)" href="javascript:;" title="编辑">
                             <i class="Hui-iconfont">&#xe6df;</i>
                         </a>
@@ -160,6 +161,29 @@
         });
     }
 
+    /*上传至正式站*/
+    function uploadToProduct(obj,id){
+        layer.confirm('确认要上传吗？',function(index){
+            $.ajax({
+                type: 'POST',
+                url: "{:url('uploadToProduct')}" + '?id=' + id,
+                dataType: 'json',
+                success: function(data){
+                    if(data.status == 'y'){
+                        layer.msg(data.info,{icon: 1,time:1000},function(){
+                            window.location.reload();
+                        });
+                    }else{
+                        layer.msg(data.info,{icon: 5,time:1000});
+                    }
+                },
+                error:function(data) {
+                    console.log(data.msg);
+                },
+            });
+        });
+    }
+
     /*编辑*/
     function admin_edit(title,id,w,h){
         url = "{:url('edit')}" + '?id=' + id;
@@ -195,8 +219,8 @@
         }
         var categorySelect = $("select[name='category_id']");
         $.ajax({
-            url: '{:url("ajax/marketChangeCity")}',
-            type: 'post',
+            url: '{:url("ajax/getLiveCategoryByCityId")}',
+            type: 'get',
             dataType: 'json',
             data: {
                 'city_id': city_id
@@ -209,11 +233,11 @@
                         $.each(data.info.categories, function(i, item){
                             option += '<option value="' + item.id + '">' + item.category_name + '</option>';
                         });
-                        option = option ? '<option value="">全部分类</option>'+ option : '<option value="">该城市无二手分类</option>';
+                        option = option ? '<option value="">全部分类</option>'+ option : '<option value="">该城市无生活分类</option>';
                         categorySelect.html(option);
                     }
                 } else {
-                    layer.msg('获取该城市的二手分类失败', {
+                    layer.msg('获取该城市的生活分类失败', {
                         icon: 2,
                         time: 1000
                     });

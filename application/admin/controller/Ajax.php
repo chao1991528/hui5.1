@@ -22,6 +22,7 @@ class Ajax extends Controller
         $dir = './uploads/' . $params['model'] . '/';
         $info = $file->move($dir);
         if ($info) {
+            $imageDomain = config('app.image_domain');
             $file = $dir . $info->getSaveName();
             if ($params['water']) {
                 $image = \think\Image::open($file);
@@ -40,7 +41,7 @@ class Ajax extends Controller
                     $image->thumb($params['thumb_width2'], $params['thumb_height2'])->save($thumb_file2);
                 }
             }
-            return json(['code' => 1, 'info' => '文件上传成功!', 'filename' => '/uploads/' . $params['model'] . '/' . $info->getSaveName()]);
+            return json(['code' => 1, 'info' => '文件上传成功!', 'filename' => $imageDomain . '/uploads/' . $params['model'] . '/' . $info->getSaveName()]);
         } else {
             // 上传失败获取错误信息
             return json(['code' => 0, 'info' => '文件上传失败：' . $file->getError()]);
@@ -72,5 +73,18 @@ class Ajax extends Controller
             return json(['status' => 'n', 'info' => '参数id不能为空！']);
         }
         return json(['status' => 'y', 'info' => ['nick_name' => model('Member')->where(['id' => $mem_id, 'is_valid' => 1])->value('nick_name')]]);
+    }
+
+    /**
+     *
+     */
+    public function getLiveCategoryByCityId()
+    {
+        $city_id = input('get.city_id');
+        if (!$city_id) {
+            return json(['status' => 'n', 'info' => '城市id不能为空！']);
+        }
+        $categories = model('LiveCategory')->where(['city_id' => $city_id, 'is_valid' => 1])->field('id,category_name')->select();
+        return json(['status' => 'y', 'info' => ['categories' => $categories]]);
     }
 }

@@ -4,134 +4,89 @@
 <style>
     .table .title{background-color: #f5fafe;font-size: 12px;vertical-align: middle;}
     .input-text,.select {font-size: 12px;}
+    .select{
+        height: 31px;
+    }
 </style>
 {/block}
-{block name="title"}编辑二手信息{/block}
+{block name="title"}编辑生活信息{/block}
 {block name="main"}
 <div class="pd-10">
     <form action="" method="post" class="form form-horizontal" enctype="multipart/form-data"  id="edit" >
         <table class="table table-border table-bordered table-bg" style="width: 100%; margin: auto;">
             <thead>
             <tr class="text-c">
-                <th scope="col" colspan="6" style="font-size: 14px;">编辑二手信息</th>
+                <th scope="col" colspan="6" style="font-size: 14px;">编辑生活信息</th>
             </tr>
             </thead>
             <tbody>
             <tr class="text-c">
-                <td width="150" class="title">会员ID：</td>
-                <td width="120"><input type="text" class="input-text" value="{$info.mem_id}" name="mem_id" id="mem_id"></td>
-                <td class="title">会员昵称：</td>
-                <td class="nick_name_td">{$info.member.nick_name}</td>
-                <td class="title">价格：</td>
-                <td><input type="text" class="input-text" value="{$info.price}" name="price"></td>
-            </tr>
-            <tr class="text-c">
-                <td width="120" class="title">标题：</td>
+                <td width="90" class="title">标题：</td>
                 <td colspan="5"><input type="text" class="input-text" value="{$info.title}" placeholder="请输入标题" name="title"></td>
             </tr>
             <tr class="text-c">
-                <td width="120" class="title">所属城市：</td>
-                <td width="130">
+                <td class="title">会员ID：</td>
+                <td width="196"><input type="text" class="input-text" value="{$info.mem_id}" name="mem_id" id="mem_id"></td>
+                <td width="90" class="title">会员昵称：</td>
+                <td width="196" class="nick_name_td">{$info.member.nick_name}</td>
+                <td width="90" class="title">城市：</td>
+                <td>
                     <select class="select" name="city_id">
                         <option value="">请选择城市</option>
                         {volist name="$citys" id="vo"}
-                            <option value="{$vo.id}" {if $info.city_id == $vo.id}selected="selected"{/if}>{$vo.name}</option>
+                        <option value="{$vo.id}" {if $info.city_id == $vo.id}selected="selected"{/if}>{$vo.name}</option>
                         {/volist}
                     </select>
                 </td>
-                <td width="120" class="title">所属区域：</td>
-                <td width="120">
-                    <select class="select" name="district_id">
-                        {volist name="districts" id="vo"}
-                            <option value="{$vo.id}" {if $info.district_id == $vo.id}selected="selected"{/if}>{$vo.name}</option>
-                        {/volist}
-                    </select>
-                </td>
-                <td width="80" class="title">所属分类：</td>
-                <td width="130">
+            </tr>
+
+            <tr class="text-c">
+                <td class="title">所属分类：</td>
+                <td>
                     <select class="select" name="category_id">
                         {volist name="categories" id="vo"}
-                            <option value="{$vo.id}" {if $info.category_id == $vo.id}selected="selected"{/if}>{$vo.category_name}
-                            </option>
+                            <option value="{$vo.id}" {if $info.category_id == $vo.id}selected="selected"{/if}>{$vo.category_name}</option>
                         {/volist}
                     </select>
                 </td>
-            </tr>
-            <tr class="text-c">
-                <td width="120" class="title">所属圈子：</td>
-                <td width="150">
-                    <select class="select" name="quanzi_id">
-                        {volist name="quanzi" id="vo"}
-                            <option value="{$vo.id}" {if $info.quanzi_id == $vo.id}selected="selected"{/if}>{$vo.quanzi_name}</option>
-                        {/volist}
-                    </select>
+                <td class="title">公司网址：</td>
+                <td>
+                    <input type="text" class="input-text" value="{$info.company_website}" name="company_website">
                 </td>
-                <td width="120" class="title">交易性质：</td>
-                <td width="150">
-                    <select class="select" name="property">
-                        {volist name="property" id="vo"}
-                            <option value="{$key}" {if $info.property == $key}selected="selected"{/if}>{$vo}</option>
-                        {/volist}
-                    </select>
-                </td>
-                <td width="120" class="title">新旧程度：</td>
-                <td width="150">
-                    <select class="select" name="oldnew">
-                        {volist name="oldnew" id="vo"}
-                            <option value="{$key}" {if $info.oldnew == $key}selected="selected"{/if}>{$vo}</option>
-                        {/volist}
-                    </select>
-                </td>
-            </tr>
-            <tr class="text-c">
-                <td width="120" class="title">保修期内：</td>
-                <td width="150">
-                    <select class="select" name="guarantee">
-                        {volist name="guarantee" id="vo"}
-                            <option value="{$key}" {if $info.guarantee == $key}selected="selected"{/if}>{$vo}</option>
-                        {/volist}
-                    </select>
-                </td>
-                <td width="120" class="title">交易区域：</td>
-                <td width="150">
-                    <select class="select" name="deal_area">
-                        {volist name="dealArea" id="vo"}
-                            <option value="{$key}" {if $info.deal_area == $key}selected="selected"{/if}>{$vo}</option>
-                        {/volist}
-                    </select>
-                </td>
-                <td width="120" class="title">是否送货：</td>
-                <td width="150">
-                    <select class="select" name="delivery">
-                        {volist name="delivery" id="vo"}
-                            <option value="{$key}" {if $info.delivery == $key}selected="selected"{/if}>{$vo}</option>
-                        {/volist}
-                    </select>
-                </td>
-            </tr>
-            <tr class="text-c">
-                <td width="120" class="title">联系人：</td>
-                <td width="130">
+                <td class="title">联系人：</td>
+                <td>
                     <input type="text" class="input-text" value="{$info.contact_person}" placeholder="联系人" name="contact_person" >
                 </td>
-                <td width="120" class="title">手机号：</td>
-                <td width="130">
-                    <input type="text" class="input-text" value="{$info.mobile}" placeholder=手机号 name="mobile" >
-                </td>
-                <td width="120" class="title">微信号：</td>
-                <td width="130">
-                    <input type="text" class="input-text" value="{$info.weixin_no}" placeholder="微信号" name="weixin_no" >
-                </td>
             </tr>
             <tr class="text-c">
-                <td width="120" class="title">邮箱：</td>
-                <td width="130" colspan="5">
+                <td class="title">手机号：</td>
+                <td>
+                    <input type="text" class="input-text" value="{$info.mobile}" placeholder=手机号 name="mobile" >
+                </td>
+                <td class="title">微信号：</td>
+                <td>
+                    <input type="text" class="input-text" value="{$info.weixin_no}" placeholder="微信号" name="weixin_no" >
+                </td>
+                <td class="title">邮箱：</td>
+                <td>
                     <input type="text" class="input-text" value="{$info.email}" placeholder="邮箱" name="email" >
                 </td>
             </tr>
             <tr class="text-c">
-                <td width="120" class="title">标签：</td>
-                <td width="130" colspan="5" style="text-align:left;">
+                <td class="title">公司名称：</td>
+                <td colspan="5"><input type="text" class="input-text" value="{$info.company_name}" placeholder="公司名称" name="company_name" ></td>
+            </tr>
+            <tr class="text-c">
+                <td class="title">公司地址：</td>
+                <td colspan="5"><input type="text" class="input-text" value="{$info.company_address}" placeholder="公司地址" name="company_address"></td>
+            </tr>
+            <tr class="text-c">
+                <td class="title">服务区域：</td>
+                <td colspan="5"><input type="text" class="input-text" value="{$info.service_area}" placeholder="服务区域" name="service_area"></td>
+            </tr>
+            <tr class="text-c">
+                <td class="title">标签：</td>
+                <td colspan="5" style="text-align:left;">
                     {volist name="tags" id="vo"}
                         <input type="checkbox" name="tag_ids[]" value="{$vo.id}" class="check-box" {in name='vo.id' value="$info['tag_ids']"}checked="checked"{/in}>
                         {$vo.tag_name}&nbsp;&nbsp;
@@ -140,10 +95,15 @@
             </tr>
             <tr class="text-c">
                 <td class="title">是否置顶：</td>
-                <td style="text-align:left;line-height: 34px;" colspan="5">
+                <td style="text-align:left;line-height: 34px;" colspan="3">
                     <input type="radio" name="is_top" value="0" {if $info.is_top == 0}checked="checked"{/if}/>&nbsp;&nbsp;否&nbsp;&nbsp;
                     <input type="radio" name="is_top" value="1" {if $info.is_top == 1}checked="checked"{/if}/>&nbsp;&nbsp;是&nbsp;&nbsp;
                     <input type="text" name="top_end_date" style="width: 60%;{if $info.is_top == 0}display:none{/if}" class="input-text datepicker" placeholder="置顶到期时间" value="{$info.top_end_date_text}" autocomplete="off"/>
+                </td>
+                <td class="title">是否保障：</td>
+                <td style="text-align:left;line-height: 34px;">
+                    <input type="radio" name="is_ensure" value="0" {if $info.is_ensure == 0}checked="checked"{/if} />&nbsp;&nbsp;否&nbsp;&nbsp;
+                    <input type="radio" name="is_ensure" value="1" {if $info.is_ensure == 1}checked="checked"{/if}/>&nbsp;&nbsp;是&nbsp;&nbsp;
                 </td>
             </tr>
             <tr class="text-c">
@@ -160,7 +120,7 @@
                         <div id="fileList" class="uploader-list"></div>
                         <br/>
                         <div id="filePicker" style="display:block;">选择图片</div>
-                        <div style="float: left;width: 100%;color: #cdcdcd;text-align: left;">最多上传三张图片</div>
+<!--                        <div style="float: left;width: 100%;color: #cdcdcd;text-align: left;">最多上传三张图片</div>-->
                     </div>
                 </td>
             </tr>
@@ -168,6 +128,16 @@
                 <td class="title">内容：</td>
                 <td colspan="5" height="100">
                     <textarea cols="100" rows="5" name="content" class="textarea">{$info.content}</textarea>
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td class="title">后台管理员：</td>
+                <td colspan="5">
+                    <select class="select" name="add_uid">
+                        {volist name="klAdmins" id="vo"}
+                        <option value="{$vo.id}" {if $info.add_uid == $vo.id}selected="selected"{/if}>{$vo.user_number}</option>
+                        {/volist}
+                    </select>
                 </td>
             </tr>
             <tr class="text-c" >
@@ -210,16 +180,22 @@
         //表单验证
         $("#edit").validate({
             rules:{
-                mem_id:{
+                title:{
                     required:true,
                 },
-                title:{
+                mem_id:{
                     required:true,
                 },
                 city_id:{
                     required:true,
                 },
-                district_id:{
+                category_id:{
+                    required:true,
+                },
+                company_name:{
+                    required:true,
+                },
+                service_area:{
                     required:true,
                 },
                 contact_person:{
@@ -254,7 +230,7 @@
             swf: '/lib/webuploader/0.1.5/Uploader.swf',
 
             // 文件接收服务端。
-            server: "{:url('ajax/upload', ['model'=>'maket','thumb'=>1,'thumb_width1'=>200,'thumb_height1'=>200,'thumb_width2'=>750,'thumb_height2'=>750,'water'=>1])}",
+            server: "{:url('ajax/upload', ['model'=>'live','thumb'=>1,'thumb_width1'=>200,'thumb_height1'=>200,'thumb_width2'=>750,'thumb_height2'=>750,'water'=>1])}",
 
             // 选择文件的按钮。可选。
             // 内部根据当前运行是创建，可能是input元素，也可能是flash.
@@ -333,11 +309,9 @@
         $("select[name='city_id']").change(function(){
             var city_id = $(this).val();
             var categorySelect = $("select[name='category_id']");
-            var districtSelect = $("select[name='district_id']");
-            var quanziSelect = $("select[name='quanzi_id']");
             $.ajax({
-                url: '{:url("ajax/marketChangeCity")}',
-                type: 'post',
+                url: '{:url("ajax/getLiveCategoryByCityId")}',
+                type: 'get',
                 dataType: 'json',
                 data: {
                     'city_id': city_id
@@ -350,25 +324,11 @@
                             $.each(data.info.categories, function(i, item){
                                 option += '<option value="' + item.id + '">' + item.category_name + '</option>';
                             });
-                            option = option ? option : '<option value="">该城市无二手分类</option>';
+                            option = option ? option : '<option value="">该城市无生活分类</option>';
                             categorySelect.html(option);
-
-                            var option = '';
-                            $.each(data.info.districts, function(i, item){
-                                option += '<option value="' + item.id + '">' + item.name + '</option>';
-                            });
-                            option = option ? option : '<option value="">该城市无下级区域</option>';
-                            districtSelect.html(option);
-
-                            var option = '';
-                            $.each(data.info.quanzi, function(i, item){
-                                option += '<option value="' + item.id + '">' + item.quanzi_name + '</option>';
-                            });
-                            option = option ? option : '<option value="">该城市无圈子</option>';
-                            quanziSelect.html(option);
                         }
                     } else {
-                        layer.msg('获取该城市的二手分类失败', {
+                        layer.msg('获取该城市的生活分类失败', {
                             icon: 2,
                             time: 1000
                         });
