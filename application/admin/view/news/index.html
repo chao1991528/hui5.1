@@ -25,7 +25,7 @@
 
         <form method="get" action="">
             <div class="text-c">
-                <input type="text" name="title" class="input-text" placeholder="标题" style="width:180px;" value="{$Think.get.title}">
+                <input type="text" name="news_title" class="input-text" placeholder="标题" style="width:180px;" value="{$Think.get.title}">
                 <select name="city_id" class="select select-box" style="width: 180px;">
                     <option value="">所属城市</option>
                     {volist name='citys' id='vo'}
@@ -38,10 +38,10 @@
                     <option value="{$vo.id}" {if $Think.get.category_id == $vo.id}selected="selected"{/if}>{$vo.category_name}</option>
                     {/volist}
                 </select>
-                <select name="status" class="select select-box" style="width: 180px;">
-                    <option value="-1">全部状态</option>
-                    {volist name='status' id='vo'}
-                    <option value="{$key}" <?php if(isset($_GET['status'])):if($_GET['status'] == $key): echo 'selected="selected"';?><?php endif;?><?php endif;?>>{$vo}</option>
+                <select name="source_id" class="select select-box" style="width: 180px;">
+                    <option value="">全部来源</option>
+                    {volist name='sources' id='vo'}
+                    <option value="{$vo.id}" {if $Think.get.source_id == $vo.id}selected="selected"{/if}>{$vo.source_name}</option>
                     {/volist}
                 </select>
                 <select name="is_top" class="select select-box" style="width: 180px;">
@@ -68,18 +68,17 @@
             <tr class="text-c">
 <!--                <th width="25"><input type="checkbox" name="" value=""></th>-->
                 <th width="80">ID</th>
-                <th width="80">会员昵称</th>
-                <th width="80">标题</th>
-                <th width="80">所属城市</th>
-                <th width="80">所属分类</th>
-                <th width="80">发布图片</th>
-                <th width="80">发布内容</th>
-                <th width="80">状态</th>
+                <th width="80">新闻分类</th>
+                <th width="80">新闻来源</th>
+                <th width="80">新闻布局</th>
+                <th width="80">新闻类型</th>
+                <th width="80">新闻标题</th>
+                <th width="80">版权声明</th>
+                <th width="80">添加时间</th>
                 <th width="80">是否置顶</th>
-                <th width="80">发布时间</th>
-                <th width="160">源地址</th>
+                <th width="80">置顶到期时间</th>
                 <th width="80">后台管理员</th>
-                <th width="60">已上传</th>
+                <th width="60">是否上传</th>
                 <th width="120">操作</th>
             </tr>
             </thead>
@@ -88,13 +87,13 @@
                 <tr class="text-c">
 <!--                    <td><input type="checkbox" value="" name=""></td>-->
                     <td>{$vo.id}</td>
-                    <td>{$vo.member.nick_name}</td>
-                    <td>{$vo.title}</td>
-                    <td>{$vo.city.name_zh}</td>
                     <td>{$vo.category.category_name}</td>
-                    <td><a href="javascript:;" onclick="showImage('{$vo.title}', '{$vo.images}')">点击预览</a></td>
-                    <td><a href="javascript:;" onclick="showContent('{$vo.title}', '{$vo.content}')">点击预览</a></td>
-                    <td>{$vo.status_text}</td>
+                    <td>{$vo.source.source_name}</td>
+                    <td>{$vo.layout.layout_name}</td>
+                    <td>{$vo.type.type_name}</td>
+                    <td>{$vo.news_title}</td>
+                    <td>{$vo.declare_text}</td>
+                    <td>{$vo.add_time_text}</td>
                     <td>
                         {if $vo.is_top == 0}
                             <span class="label label-default radius">否</span>
@@ -102,8 +101,8 @@
                             <span class="label label-success radius">是</span>
                         {/if}
                     </td>
-                    <td>{$vo.add_time_text}</td>
-                    <td>{$vo.source_url}</td>
+
+                    <td>{$vo.top_end_date_text}</td>
                     <td>{$vo.kaola_admin.user_number}</td>
                     <td>{if $vo.is_uploaded == 0}
                         <span class="label label-default radius">否</span>

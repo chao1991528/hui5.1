@@ -117,7 +117,14 @@ class Live extends Base
      */
     public function delete($id)
     {
-        //
+        $live = LiveModel::where(['is_delete' => 0, 'id' => $id])->find();
+        if (!$live) {
+            $this->error('生活信息不存在，无法删除！');
+        }
+        $live->is_delete = 1;
+        $live->delete_time = time();
+        $live->save();
+        return json(['info' => '删除成功', 'status' => 'y']);
     }
 
     /**
