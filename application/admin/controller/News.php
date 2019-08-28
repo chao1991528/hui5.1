@@ -92,11 +92,13 @@ class News extends Base
             $sources = model('NewsSource')->where(['is_valid' => 1, 'is_delete' => 0])->field('id,source_name')->select();
             $types = model('NewsType')->where(['is_valid' => 1, 'is_delete' => 0])->field('id,type_name')->select();
             $layouts = model('NewsLayout')->where(['is_valid' => 1, 'is_delete' => 0])->field('id,layout_name')->select();
+            $tags = db('news_tag')->where(['is_valid' => 1, 'is_delete' => 0])->field('id,tag_name')->select();
             $isTop = NewsModel::getIsTopList();
+            $declares = NewsModel::getDeclareList();
             $klAdmins = KaolaAdmin::where('is_valid', 1)->field('id,user_number')->select();
             $info->news_picture = str_replace(['"', '[', ']', ' '], ['', '', '', ''], $info->news_picture);
             $info->news_image = str_replace(['"', '[', ']', ' '], ['', '', '', ''], $info->news_image);
-            $info->content = html_entity_decode($info->content);
+            // $info->content = html_entity_decode($info->content);
             if (!empty($info->news_picture)) {
                 $picture_arr = explode(',', $info->news_picture);
                 foreach ($picture_arr as $key => $value) {
@@ -113,6 +115,8 @@ class News extends Base
                 'categories' => $categories,
                 'sources' => $sources,
                 'layouts' => $layouts,
+                'tags' => $tags,
+                'declares' => $declares,
                 'isTop' => $isTop,
                 'klAdmins' => $klAdmins
             ]);

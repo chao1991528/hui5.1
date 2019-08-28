@@ -63,17 +63,17 @@
                 </td>
                 <td width="90" class="title">标题标签：</td>
                 <td width="196">
-                    <select class="select" name="category_id">
-                        {volist name="categories" id="vo"}
-                        <option value="{$vo.id}" {if $info.category_id == $vo.id}selected="selected"{/if}>{$vo.category_name}</option>
+                    <select class="select" name="title_tag_id">
+                        {volist name="tags" id="vo"}
+                        <option value="{$vo.id}" {if $info.title_tag_id == $vo.id}selected="selected"{/if}>{$vo.tag_name}</option>
                         {/volist}
                     </select>
                 </td>
                 <td width="90" class="title">新闻标签：</td>
                 <td>
-                    <select class="select" name="source_id">
-                        {volist name="sources" id="vo"}
-                        <option value="{$vo.id}" {if $info.source_id == $vo.id}selected="selected"{/if}>{$vo.source_name}</option>
+                    <select class="select" name="news_tag_id">
+                        {volist name="tags" id="vo"}
+                        <option value="{$vo.id}" {if $info.news_tag_id == $vo.id}selected="selected"{/if}>{$vo.tag_name}</option>
                         {/volist}
                     </select>
                 </td>
@@ -81,27 +81,19 @@
             <tr class="text-c">
                 <td class="title">版权声明：</td>
                 <td width="196">
-                    <select class="select" name="layout_id">
-                        {volist name="layouts" id="vo"}
-                        <option value="{$vo.id}" {if $info.layout_id == $vo.id}selected="selected"{/if}>{$vo.layout_name}</option>
+                    <select class="select" name="declare_id">
+                        {volist name="declares" id="vo"}
+                        <option value="{$key}" {if $info.declare_id == $key}selected="selected"{/if}>{$vo}</option>
                         {/volist}
                     </select>
                 </td>
                 <td width="90" class="title">原文链接：</td>
                 <td width="196">
-                    <select class="select" name="category_id">
-                        {volist name="categories" id="vo"}
-                        <option value="{$vo.id}" {if $info.category_id == $vo.id}selected="selected"{/if}>{$vo.category_name}</option>
-                        {/volist}
-                    </select>
+                    <input type="text" class="input-text" value="{$info.news_url}" name="news_url" />
                 </td>
                 <td width="90" class="title">搜索标签：</td>
                 <td>
-                    <select class="select" name="source_id">
-                        {volist name="sources" id="vo"}
-                        <option value="{$vo.id}" {if $info.source_id == $vo.id}selected="selected"{/if}>{$vo.source_name}</option>
-                        {/volist}
-                    </select>
+                    <input type="text" class="input-text" value="{$info.search_key}" name="search_key"/>
                 </td>
             </tr>
             <tr class="text-c">
@@ -115,7 +107,7 @@
                 <td style="text-align:left;line-height: 34px;" colspan="5">
                     <input type="radio" name="is_top" value="0" {if $info.is_top == 0}checked="checked"{/if}/>&nbsp;&nbsp;否&nbsp;&nbsp;
                     <input type="radio" name="is_top" value="1" {if $info.is_top == 1}checked="checked"{/if}/>&nbsp;&nbsp;是&nbsp;&nbsp;
-                    <input type="text" name="top_end_date" style="width: 60%;{if $info.is_top == 0}display:none{/if}" class="input-text datepicker" placeholder="置顶到期时间" value="{$info.top_end_date_text}" autocomplete="off"/>
+                    <input type="text" name="top_end_date" style="width: 60%;{if $info.is_top == 0}display:none{/if}" class="input-text datepicker" placeholder="置顶到期时间" value="{if $info.is_top == 1}{$info.top_end_date_text}{/if}" autocomplete="off"/>
                 </td>
             </tr>
             <tr class="text-c">
@@ -139,7 +131,7 @@
             <tr class="text-c">
                 <td class="title">内容：</td>
                 <td colspan="5" height="100">
-                    <textarea cols="100" rows="5" name="content" class="textarea">{$info.content}</textarea>
+                    <script id="editor" type="text/plain" style="width:100%;"></script> 
                 </td>
             </tr>
             <tr class="text-c">
@@ -163,15 +155,18 @@
 
     </form>
 </div>
+<div id="contentDiv" style="display:none">
+    <{$info.content}>
+</div>
 {/block}
 {block name="js"}
 <script type="text/javascript" src="/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
 <script type="text/javascript" src="/lib/jquery.validation/1.14.0/validate-methods.js"></script>
 <script type="text/javascript" src="/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 <script type="text/javascript" src="/lib/webuploader/0.1.5/webuploader.min.js"></script>
-<!--<script type="text/javascript" src="/lib/ueditor/1.4.3/ueditor.config.js"></script>-->
-<!--<script type="text/javascript" src="/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>-->
-<!--<script type="text/javascript" src="/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>-->
+<script type="text/javascript" src="/lib/ueditor/1.4.3/ueditor.config.js"></script>
+<script type="text/javascript" src="/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
+<script type="text/javascript" src="/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
 <script type="text/javascript">
 
     function removeFile(obj){
@@ -389,6 +384,13 @@
             language: "zh-cn",
             format: "yyyy-mm-dd hh:ii",
             autoclose: true
+        });
+
+        var ue = UE.getEditor('editor', {
+            autoHeight: false
+        });
+        ue.ready(function() {
+            ue.setContent($('#contentDiv').html());
         });
     });
 </script>
