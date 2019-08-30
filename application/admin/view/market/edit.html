@@ -4,6 +4,9 @@
 <style>
     .table .title{background-color: #f5fafe;font-size: 12px;vertical-align: middle;}
     .input-text,.select {font-size: 12px;}
+    .select{
+        height: 31px;
+    }
 </style>
 {/block}
 {block name="title"}编辑二手信息{/block}
@@ -168,6 +171,16 @@
                 <td class="title">内容：</td>
                 <td colspan="5" height="100">
                     <textarea cols="100" rows="5" name="content" class="textarea">{$info.content}</textarea>
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td class="title">后台管理员：</td>
+                <td colspan="5">
+                    <select class="select" name="add_uid">
+                        {volist name="klAdmins" id="vo"}
+                        <option value="{$vo.id}" {if $info.add_uid == $vo.id}selected="selected"{/if}>{$vo.user_number}</option>
+                        {/volist}
+                    </select>
                 </td>
             </tr>
             <tr class="text-c" >

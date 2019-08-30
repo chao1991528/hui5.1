@@ -8,12 +8,12 @@
     }
 </style>
 {/block}
-{block name="title"}二手列表{/block}
+{block name="title"}房源列表{/block}
 {block name="main"}
 <nav class="breadcrumb">
     <i class="Hui-iconfont">&#xe67f;</i> 首页
-    <span class="c-gray en">&gt;</span> 二手管理
-    <span class="c-gray en">&gt;</span> 二手列表
+    <span class="c-gray en">&gt;</span> 房源管理
+    <span class="c-gray en">&gt;</span> 房源列表
     <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" >
         <i class="Hui-iconfont">&#xe68f;</i>
     </a>
@@ -26,28 +26,28 @@
         <form method="get" action="">
             <div class="text-c">
                 <input type="text" name="title" class="input-text" placeholder="标题" style="width:180px;" value="{$Think.get.title}">
-                <select name="city_id" class="select select-box" style="width: 180px;">
+                <select name="house_resource_type" class="select select-box" style="width: 180px;">
+                    <option value="">房源类型</option>
+                    {volist name='resourceTypes' id='vo'}
+                    <option value="{$key}" {if $Think.get.house_resource_type == $key}selected="selected"{/if}>{$vo}</option>
+                    {/volist}
+                </select>
+                <select name="house_rent_type" class="select select-box" style="width: 180px;">
+                    <option value="">出租类型</option>
+                    {volist name='rentTypes' id='vo'}
+                    <option value="{$key}" {if $Think.get.house_rent_type == $key}selected="selected"{/if}>{$vo}</option>
+                    {/volist}
+                </select>
+                <select name="house_resource_city_id" class="select select-box" style="width: 180px;">
                     <option value="">所属城市</option>
                     {volist name='citys' id='vo'}
-                    <option value="{$vo.id}" {if $Think.get.city_id == $vo.id}selected="selected"{/if}>{$vo.name}</option>
+                    <option value="{$vo.id}" {if $Think.get.house_resource_city_id == $vo.id}selected="selected"{/if}>{$vo.name}</option>
                     {/volist}
                 </select>
-                <select name="category_id" class="select select-box" style="width: 180px;">
-                    <option value="">全部分类</option>
-                    {volist name='categories' id='vo'}
-                    <option value="{$vo.id}" {if $Think.get.category_id == $vo.id}selected="selected"{/if}>{$vo.category_name}</option>
-                    {/volist}
-                </select>
-                <select name="status" class="select select-box" style="width: 180px;">
-                    <option value="-1">全部状态</option>
-                    {volist name='status' id='vo'}
-                    <option value="{$key}" <?php if(isset($_GET['status'])):if($_GET['status'] == $key): echo 'selected="selected"';?><?php endif;?><?php endif;?>>{$vo}</option>
-                    {/volist}
-                </select>
-                <select name="is_top" class="select select-box" style="width: 180px;">
-                    <option value="-1">是否置顶</option>
-                    {volist name='isTop' id='vo'}
-                    <option value="{$key}" <?php if(isset($_GET['is_top'])):if($_GET['is_top'] == $key): echo 'selected="selected"';?><?php endif;?><?php endif;?>>{$vo}</option>
+                <select name="house_resource_districts_id" class="select select-box" style="width: 180px;">
+                    <option value="">所属区域</option>
+                    {volist name='districts' id='vo'}
+                    <option value="{$vo.id}" {if $Think.get.house_resource_districts_id == $vo.id}selected="selected"{/if}>{$vo.name}</option>
                     {/volist}
                 </select>
                 <button class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
@@ -67,21 +67,22 @@
             <thead>
             <tr class="text-c">
 <!--                <th width="25"><input type="checkbox" name="" value=""></th>-->
-                <th width="80">ID</th>
+                <th width="50">ID</th>
                 <th width="80">会员昵称</th>
-                <th width="80">标题</th>
-                <th width="80">所属城市</th>
-                <th width="80">所属分类</th>
-                <th width="80">所属圈子</th>
-                <th width="80">发布图片</th>
-                <th width="80">发布内容</th>
-                <th width="80">状态</th>
-                <th width="80">是否置顶</th>
+                <th width="140">标题</th>
+                <th width="80">房源类型</th>
+<!--                <th width="80">所属分类</th>-->
+                <th width="80">出租类型</th>
+                <th width="80">房间类型</th>
+                <th width="80">有人居住</th>
+                <th width="80">允许宠物</th>
+                <th width="80">独立卫浴</th>
+                <th width="80">租客性别</th>
                 <th width="80">发布时间</th>
-                <th width="80">顶贴时间</th>
+                <th width="160">源地址</th>
                 <th width="80">后台管理员</th>
                 <th width="60">已上传</th>
-                <th width="120">操作</th>
+                <th width="80">操作</th>
             </tr>
             </thead>
             <tbody>
@@ -91,21 +92,15 @@
                     <td>{$vo.id}</td>
                     <td>{$vo.member.nick_name}</td>
                     <td>{$vo.title}</td>
-                    <td>{$vo.city.name_zh}</td>
-                    <td>{$vo.category.category_name}</td>
-                    <td>{$vo.quanzi.quanzi_name}</td>
-                    <td><a href="javascript:;" onclick="showImage('{$vo.title}', '{$vo.images}')">点击预览</a></td>
-                    <td><a href="javascript:;" onclick="showContent('{$vo.title}', '{$vo.content}')">点击预览</a></td>
-                    <td>{$vo.status_text}</td>
-                    <td>
-                        {if $vo.is_top == 0}
-                            <span class="label label-default radius">否</span>
-                            {else /}
-                            <span class="label label-success radius">是</span>
-                        {/if}
-                    </td>
+                    <td>{$vo.resource_type_text}</td>
+                    <td>{$vo.rent_type_text}</td>
+                    <td>{$vo.room_type_text}</td>
+                    <td>{$vo.is_parlor_resident_text}</td>
+                    <td>{$vo.can_keep_pat_text}</td>
+                    <td>{$vo.have_separate_bathroom_text}</td>
+                    <td>{$vo.tenant_gender_text}</td>
                     <td>{$vo.add_time_text}</td>
-                    <td>{$vo.top_time_text}</td>
+                    <td>{$vo.source_url}</td>
                     <td>{$vo.kaola_admin.user_number}</td>
                     <td>{if $vo.is_uploaded == 0}
                         <span class="label label-default radius">否</span>
@@ -221,8 +216,8 @@
         }
         var categorySelect = $("select[name='category_id']");
         $.ajax({
-            url: '{:url("ajax/marketChangeCity")}',
-            type: 'post',
+            url: '{:url("ajax/getLiveCategoryByCityId")}',
+            type: 'get',
             dataType: 'json',
             data: {
                 'city_id': city_id
@@ -235,11 +230,11 @@
                         $.each(data.info.categories, function(i, item){
                             option += '<option value="' + item.id + '">' + item.category_name + '</option>';
                         });
-                        option = option ? '<option value="">全部分类</option>'+ option : '<option value="">该城市无二手分类</option>';
+                        option = option ? '<option value="">全部分类</option>'+ option : '<option value="">该城市无房源分类</option>';
                         categorySelect.html(option);
                     }
                 } else {
-                    layer.msg('获取该城市的二手分类失败', {
+                    layer.msg('获取该城市的房源分类失败', {
                         icon: 2,
                         time: 1000
                     });

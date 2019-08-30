@@ -40,6 +40,11 @@ class News extends Model
         return !empty($data['top_end_date']) ? date('Y-m-d H:i:s', $data['top_end_date']) : '-';
     }
 
+    public function getPublishTimeTextAttr($value, $data)
+    {
+        return !empty($data['publish_time']) ? date('Y-m-d H:i:s', $data['publish_time']) : '';
+    }
+
     public function category()
     {
         return $this->belongsTo('LiveCategory', 'category_id');

@@ -2,6 +2,7 @@
 
 namespace app\admin\controller;
 
+use app\admin\model\KaolaAdmin;
 use app\admin\model\Market as MarketModel;
 
 class Market extends Base
@@ -84,6 +85,15 @@ class Market extends Base
             }
             $data['tag_ids'] = !empty($data['tag_ids']) ? implode(',', $data['tag_ids']) : '';
             $data['top_end_date'] = !empty($data['top_end_date']) ? strtotime($data['top_end_date']) : '';
+            $imageArr = explode(',', $data['images']);
+            $image200 = $image750 = '';
+            foreach ($imageArr as $image) {
+                $position = strrpos($image, '.');
+                $image200 = $image200 ? $image200 . ',' . substr_replace($image, '_thumb_200', $position, 0) : substr_replace($image, '_thumb_200', $position, 0);
+                $image750 = $image750 ? $image750 . ',' . substr_replace($image, '_thumb_750', $position, 0) : substr_replace($image, '_thumb_750', $position, 0);
+            }
+            $data['image_thumbs_200'] = $image200;
+            $data['image_thumbs_750'] = $image750;
             $market->allowField(true)->save($data, ['id' => $id]);
             return json(['info' => '修改成功!', 'status' => 'y']);
         } else {
@@ -104,6 +114,7 @@ class Market extends Base
             $isTop = MarketModel::getIsTopList();
             $tags = model('MarketTag')->where(['is_valid' => 1, 'is_delete' => 0])->field('id,tag_name')->select();
             $info->imageList = explode(',', $info->images);
+            $klAdmins = KaolaAdmin::where('is_valid', 1)->field('id,user_number')->select();
             return $this->fetch('market/edit', [
                 'info' => $info,
                 'citys' => $citys,
@@ -117,7 +128,8 @@ class Market extends Base
                 'delivery' => $delivery,
                 'status' => $status,
                 'isTop' => $isTop,
-                'tags' => $tags
+                'tags' => $tags,
+                'klAdmins' => $klAdmins,
             ]);
         }
     }
@@ -138,5 +150,30 @@ class Market extends Base
         $market->delete_time = time();
         $market->save();
         return json(['info' => '删除成功', 'status' => 'y']);
+    }
+
+    /**
+     * 上传到正式服务器
+     */
+    public function uploadToProduct($id)
+    {
+        if (empty($id)) {
+            $this->error('id不能为空！');
+        }
+        $market = db('market')->where('id', $id)->field('id,source_url', true)->find();
+        if ($market) {
+            if ($market['is_uploaded']) {
+                $this->error('已经上传过了，请勿重复上传!');
+            } else {
+                unset($market['is_uploaded']);
+            }
+            $market['update_time'] = time();
+        } else {
+            return json(['info' => '上传失败:二手信息不存在', 'status' => 'n']);
+        }
+        $productMarketModel = model('ProductMarket');
+        $productMarketModel->save($market);
+        db('market')->where('id', $id)->update(['is_uploaded' => 1]);
+        return json(['info' => '上传成功！', 'status' => 'y']);
     }
 }

@@ -12,14 +12,23 @@
 {block name="title"}编辑新闻{/block}
 {block name="main"}
 <div class="pd-10">
-    <form action="" method="post" class="form form-horizontal" enctype="multipart/form-data"  id="edit" >
+    <form action="" method="post" class="form form-horizontal" enctype="multipart/form-data"  id="edit" autocomplete="off">
         <table class="table table-border table-bordered table-bg" style="width: 100%; margin: auto;">
             <thead>
             <tr class="text-c">
-                <th scope="col" colspan="6" style="font-size: 14px;">编辑新闻</th>
+                <th scope="col" colspan="6" style="font-size: 14px;">{empty name="info.id"}添加{else /}编辑{/empty}新闻</th>
             </tr>
             </thead>
             <tbody>
+            {empty name="info.id"}
+            <tr class="text-c">
+                <td class="title">微信采集：</td>
+                <td colspan="5" style="text-align: left;">
+                    <input type="text" class="input-text" style="width: 70%;" value="" placeholder="请输入微信文章地址" id="wx_url" />
+                    <input type="button" value="采集" class="btn btn-primary radius collectBtn" style="width:80px;" />
+                </td>
+            </tr>
+            {/empty}
             <tr class="text-c">
                 <td width="90" class="title">标题：</td>
                 <td colspan="5">
@@ -28,16 +37,18 @@
             </tr>
             <tr class="text-c">
                 <td class="title">新闻类型：</td>
-                <td width="196">
-                    <select class="select" name="types">
+                <td width="150">
+                    <select class="select" name="type_id">
+                        <option value="">选择类型</option>
                         {volist name="types" id="vo"}
                         <option value="{$vo.id}" {if $info.type_id == $vo.id}selected="selected"{/if}>{$vo.type_name}</option>
                         {/volist}
                     </select>
                 </td>
                 <td width="90" class="title">新闻分类：</td>
-                <td width="196">
+                <td width="240">
                     <select class="select" name="category_id">
+                        <option value="">选择分类</option>
                         {volist name="categories" id="vo"}
                         <option value="{$vo.id}" {if $info.category_id == $vo.id}selected="selected"{/if}>{$vo.category_name}</option>
                         {/volist}
@@ -46,6 +57,7 @@
                 <td width="90" class="title">新闻来源：</td>
                 <td>
                     <select class="select" name="source_id">
+                        <option value="">选择来源</option>
                         {volist name="sources" id="vo"}
                         <option value="{$vo.id}" {if $info.source_id == $vo.id}selected="selected"{/if}>{$vo.source_name}</option>
                         {/volist}
@@ -56,6 +68,7 @@
                 <td class="title">新闻布局：</td>
                 <td width="196">
                     <select class="select" name="layout_id">
+                        <option value="">选择布局</option>
                         {volist name="layouts" id="vo"}
                         <option value="{$vo.id}" {if $info.layout_id == $vo.id}selected="selected"{/if}>{$vo.layout_name}</option>
                         {/volist}
@@ -64,6 +77,7 @@
                 <td width="90" class="title">标题标签：</td>
                 <td width="196">
                     <select class="select" name="title_tag_id">
+                        <option value="">选择标签</option>
                         {volist name="tags" id="vo"}
                         <option value="{$vo.id}" {if $info.title_tag_id == $vo.id}selected="selected"{/if}>{$vo.tag_name}</option>
                         {/volist}
@@ -72,6 +86,7 @@
                 <td width="90" class="title">新闻标签：</td>
                 <td>
                     <select class="select" name="news_tag_id">
+                        <option value="">选择标签</option>
                         {volist name="tags" id="vo"}
                         <option value="{$vo.id}" {if $info.news_tag_id == $vo.id}selected="selected"{/if}>{$vo.tag_name}</option>
                         {/volist}
@@ -79,35 +94,57 @@
                 </td>
             </tr>
             <tr class="text-c">
+                <td width="90" class="title">推荐热门：</td>
+                <td width="196" style="text-align:left">
+                    <input type="checkbox" name="is_recommend" value="1" class="check-box" {if $info.is_recommend == 1}checked="checked"{/if}> 是否推荐&nbsp;&nbsp;
+                    <input type="checkbox" name="is_hot" value="1" class="check-box" {if $info.is_hot == 1}checked="checked"{/if}> 是否热门</td>
+                </td>
+                <td width="90" class="title">定时发布：</td>
+                <td style="text-align:left;line-height: 34px;">
+                    <input type="radio" name="is_publish" value="0" {if $info.is_publish == 0}checked="checked"{/if}>&nbsp;&nbsp;否&nbsp;&nbsp;
+                    <input type="radio" name="is_publish" value="1" {if $info.is_publish == 1}checked="checked"{/if}>&nbsp;&nbsp;是&nbsp;&nbsp;
+                    <input type="text" name="publish_time" style="width: 60%;{if $info.is_publish == 0}display: none;{/if}" class="input-text datepicker" placeholder="请选择发布时间" value="{$info.publish_time_text}" >
+                </td>
                 <td class="title">版权声明：</td>
                 <td width="196">
                     <select class="select" name="declare_id">
+                        <option value="">选择声明</option>
                         {volist name="declares" id="vo"}
                         <option value="{$key}" {if $info.declare_id == $key}selected="selected"{/if}>{$vo}</option>
                         {/volist}
                     </select>
                 </td>
-                <td width="90" class="title">原文链接：</td>
-                <td width="196">
-                    <input type="text" class="input-text" value="{$info.news_url}" name="news_url" />
+            </tr>
+            <tr class="text-c">
+                <td class="title">是否置顶：</td>
+                <td style="text-align:left;line-height: 34px;" colspan="3">
+                    <input type="radio" name="is_top" value="0" {if $info.is_top == 0}checked="checked"{/if}/>&nbsp;&nbsp;否&nbsp;&nbsp;
+                    <input type="radio" name="is_top" value="1" {if $info.is_top == 1}checked="checked"{/if}/>&nbsp;&nbsp;是&nbsp;&nbsp;
+                    <input type="text" name="top_end_date" style="width: 60%;{if $info.is_top == 0}display:none{/if}" class="input-text datepicker" placeholder="置顶到期时间" value="{if $info.is_top == 1}{$info.top_end_date_text}{/if}" autocomplete="off"/>
                 </td>
+                <td class="title">小程序：</td>
+                <td style="text-align:left">
+                    <input type="checkbox" name="is_applet" value="1" class="check-box" {if $info.is_applet == 1}checked="checked"{/if}> 是否发布到小程序
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td width="90" class="title">原文链接：</td>
+                <td colspan="5" style="text-align: left;">
+                    <input type="text" class="input-text" value="{$info.news_url}" placeholder="原文链接" name="news_url" style="width: 70%;">
+                </td>
+            </tr>
+            <tr class="text-c">
                 <td width="90" class="title">搜索标签：</td>
-                <td>
-                    <input type="text" class="input-text" value="{$info.search_key}" name="search_key"/>
+                <td colspan="5" style="text-align: left;">
+                    <input type="text" class="input-text" value="{$info.search_key}" placeholder="搜索标签" name="search_key" style="width: 70%;">
+                    <span style="margin-left: 10px;color: #aaa;">空格分隔，最多5个关键词</span>
                 </td>
             </tr>
             <tr class="text-c">
                 <td width="90" class="title">摘要：</td>
-                <td colspan="5">
-                    <input type="text" class="input-text" value="{$info.news_title}" placeholder="摘要" name="news_title">
-                </td>
-            </tr>
-            <tr class="text-c">
-                <td class="title">是否置顶：</td>
-                <td style="text-align:left;line-height: 34px;" colspan="5">
-                    <input type="radio" name="is_top" value="0" {if $info.is_top == 0}checked="checked"{/if}/>&nbsp;&nbsp;否&nbsp;&nbsp;
-                    <input type="radio" name="is_top" value="1" {if $info.is_top == 1}checked="checked"{/if}/>&nbsp;&nbsp;是&nbsp;&nbsp;
-                    <input type="text" name="top_end_date" style="width: 60%;{if $info.is_top == 0}display:none{/if}" class="input-text datepicker" placeholder="置顶到期时间" value="{if $info.is_top == 1}{$info.top_end_date_text}{/if}" autocomplete="off"/>
+                <td colspan="5" style="text-align: left;">
+                    <input type="text" class="input-text" value="{$info.news_title}" placeholder="摘要" name="news_title" style="width: 70%;">
+                    <span style="margin-left: 10px;color: #aaa;">最好100字以内</span>
                 </td>
             </tr>
             <tr class="text-c">
@@ -131,6 +168,11 @@
             <tr class="text-c">
                 <td class="title">内容：</td>
                 <td colspan="5" height="100">
+                    <p>
+                        <input type="button" id="paibanBtn2" value="字号修改" class="btn btn-primary radius" style="width:120px;margin-left:20px;">
+                        <input type="button" id="paibanBtn" value="一键文字排版" class="btn btn-primary radius" style="width:120px;margin-left:20px;">
+                        <label style="padding-top: 2px; color: rgb(170, 170, 170); margin-left: 10px;">微软雅黑、18号字体、两边对齐、行间距2em、字间距0.5px、图片左右边距清零</label>
+                    </p>
                     <script id="editor" type="text/plain" style="width:100%;"></script> 
                 </td>
             </tr>
@@ -156,7 +198,7 @@
     </form>
 </div>
 <div id="contentDiv" style="display:none">
-    <{$info.content}>
+    <?php echo $info->content;?>
 </div>
 {/block}
 {block name="js"}
@@ -380,6 +422,15 @@
                 $('input[name=top_end_date]').val('');
             }
         });
+        //是否定时发布切换
+        $('input[name=is_publish]').on('click', function () {
+            if (this.value == 1) {
+                $('input[name=publish_time]').show();
+            } else {
+                $('input[name=publish_time]').hide();
+                $('input[name=publish_time]').val('');
+            }
+        });
         $(".datepicker").datetimepicker({
             language: "zh-cn",
             format: "yyyy-mm-dd hh:ii",
@@ -387,9 +438,73 @@
         });
 
         var ue = UE.getEditor('editor', {
-            autoHeight: false
+            autoHeight: false,
+            // allowDivTransToP:false,
+            elementPathEnabled : false,
+            wordCount:false,
+            textarea:'content'
         });
         ue.ready(function() {
+            ue.setContent($('#contentDiv').html());
+            // ue.execCommand('insertHtml', $('#contentDiv').html());
+        });
+
+        $('.collectBtn').on('click', function(){
+            var index = layer.load(1, {
+                shade: [0.1,'#fff'] //0.1透明度的白色背景
+            });
+            $.ajax({
+                url:"{:url('ajax/collect_wechat')}",
+                type:'post',
+                dataType:'json',
+                data:{'url':$("#wx_url").val()},
+                success:function(data){
+                    layer.close(index);
+                    if(data.code == 1){
+                        $("input[name='news_title']").val(data.data.title);
+                        $("input[name='news_url']").val($('#wx_url').val());
+                        // $('#c-content').html(data.data.content);
+                        ue.setContent(data.data.content);
+//                            $('#c-content').summernote('code', data.data.content);
+                        $("input[name='news_picture']").val(data.data.news_picture);
+                        // ue.setContent(data.data.content);
+                    }else{
+                        layer.msg(data.msg,{icon: 5,time:1000});
+                    }
+                }
+            });
+        });
+
+        $('#paibanBtn').on('click', function(){
+            $('#contentDiv').html(ue.getContent());
+            $('#contentDiv').find('p').each(function(i){
+                $(this).css('font-family', '微软雅黑,Microsoft YaHei');
+                $(this).css('font-size', '18px');
+                $(this).css('line-height', '2em');
+                $(this).css('text-align', 'justify ');
+                $(this).css('letter-spacing', '0.5px');
+                $(this).css('margin', '');
+                $(this).css('padding', '');
+            });
+            $('#contentDiv').find('span').each(function(i){
+                $(this).css('font-size', '18px');
+            });
+            $('#contentDiv').find('img').each(function(i){
+                $(this).css('margin-left', '');
+                $(this).css('margin-right', '');
+            });
+            ue.setContent($('#contentDiv').html());
+        });
+
+        $('#paibanBtn2').on('click', function(){
+            $('#contentDiv').html(ue.getContent());
+            $('#contentDiv').find('p').each(function(i){
+                $(this).css('font-size', '18px');
+
+            });
+            $('#contentDiv').find('span').each(function(i){
+                $(this).css('font-size', '18px');
+            });
             ue.setContent($('#contentDiv').html());
         });
     });
