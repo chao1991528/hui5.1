@@ -1,0 +1,411 @@
+{extend name="base" /}
+{block name="css"}
+<link rel="stylesheet" type="text/css" href="/lib/webuploader/0.1.5/webuploader.css">
+<style>
+    .table .title{background-color: #f5fafe;font-size: 12px;vertical-align: middle;}
+    .input-text,.select {font-size: 12px;}
+    .select{
+        height: 31px;
+    }
+</style>
+{/block}
+{block name="title"}编辑招聘信息{/block}
+{block name="main"}
+<div class="pd-10">
+    <form action="" method="post" class="form form-horizontal" enctype="multipart/form-data" id="edit" autocomplete="off">
+        <table class="table table-border table-bordered table-bg" style="width: 100%; margin: auto;">
+            <thead>
+            <tr class="text-c">
+                <th scope="col" colspan="6" style="font-size: 14px;">编辑招聘信息</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="text-c">
+                <td width="150" class="title">会员ID：</td>
+                <td width="120">
+                    <input type="text" class="input-text" value="{$info.mem_id}" name="mem_id" id="mem_id" required="required">
+                </td>
+                <td class="title">会员昵称：</td>
+                <td class="nick_name_td">{$info.member.nick_name}</td>
+                <td class="title">公司名称：</td>
+                <td>
+                    <input type="text" class="input-text" value="{$info.company_name}" name="company_name" required="required">
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td width="120" class="title">标题：</td>
+                <td colspan="5">
+                    <input type="text" class="input-text" value="{$info.title}" placeholder="请输入标题" name="title" required="required">
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td width="120" class="title">薪资情况：</td>
+                <td width="130">
+                    <input type="text" class="input-text" value="{$info.wage}" placeholder="不填表示面议" name="wage" >
+                </td>
+                <td width="120" class="title">所属城市：</td>
+                <td width="120">
+                    <select class="select" name="city_id" required="required">
+                        {volist name="citys" id="vo"}
+                            <option value="{$vo.id}" {if $info.city_id == $vo.id}selected="selected"{/if}>{$vo.name}</option>
+                        {/volist}
+                    </select>
+                </td>
+                <td width="80" class="title">所属区域：</td>
+                <td width="130">
+                    <select class="select" name="district_id" required="required">
+                        {volist name="districts" id="vo"}
+                        <option value="{$vo.id}" {if $info.district_id == $vo.id}selected="selected"{/if}>{$vo.name}</option>
+                        {/volist}
+                    </select>
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td width="120" class="title">学历要求：</td>
+                <td width="150">
+                    <select class="select" name="education">
+                        {volist name="educations" id="vo"}
+                            <option value="{$key}" {if $info.education == $key}selected="selected"{/if}>{$vo}</option>
+                        {/volist}
+                    </select>
+                </td>
+                <td width="120" class="title">签证要求：</td>
+                <td width="150">
+                    <select class="select" name="visa">
+                        {volist name="visas" id="vo"}
+                            <option value="{$key}" {if $info.visa == $key}selected="selected"{/if}>{$vo}</option>
+                        {/volist}
+                    </select>
+                </td>
+                <td width="120" class="title">经验要求：</td>
+                <td width="150">
+                    <select class="select" name="experience">
+                        {volist name="experiences" id="vo"}
+                            <option value="{$key}" {if $info.experience == $key}selected="selected"{/if}>{$vo}</option>
+                        {/volist}
+                    </select>
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td width="120" class="title">所属行业：</td>
+                <td width="150">
+                    <select class="select" name="industry_id">
+                        {volist name="industries" id="vo"}
+                            <option value="{$vo.id}" {if $info.industry_id == $vo.id}selected="selected"{/if}>{$vo.name}</option>
+                        {/volist}
+                    </select>
+                </td>
+                <td width="120" class="title">性别要求：</td>
+                <td width="150">
+                    <select class="select" name="gender">
+                        {volist name="genders" id="vo"}
+                            <option value="{$key}" {if $info.gender == $key}selected="selected"{/if}>{$vo}</option>
+                        {/volist}
+                    </select>
+                </td>
+                <td width="120" class="title">邮箱地址：</td>
+                <td width="150">
+                    <input type="text" class="input-text" value="{$info.email}" name="email">
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td width="120" class="title">联系人：</td>
+                <td width="130">
+                    <input type="text" class="input-text" value="{$info.contact_person}" placeholder="联系人" name="contact_person" required="required">
+                </td>
+                <td width="120" class="title">手机号：</td>
+                <td width="130">
+                    <input type="text" class="input-text" value="{$info.mobile}" placeholder=手机号 name="mobile" >
+                </td>
+                <td width="120" class="title">微信号：</td>
+                <td width="130">
+                    <input type="text" class="input-text" value="{$info.weixin_no}" placeholder="微信号" name="weixin_no" >
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td width="120" class="title">邮箱：</td>
+                <td width="130" colspan="5">
+                    <input type="text" class="input-text" value="{$info.email}" placeholder="邮箱" name="email" required="required">
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td width="120" class="title">工作性质：</td>
+                <td width="130" colspan="5" style="text-align:left;">
+                    {volist name="natures" id="vo"}
+                        <input type="checkbox" name="nature[]" value="{$key}" class="check-box" {in name='key' value="$info['nature']"}checked="checked"{/in}>
+                        {$vo}&nbsp;&nbsp;
+                    {/volist}
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td width="120" class="title">工作地址：</td>
+                <td colspan="5">
+                    <input type="text" class="input-text" value="{$info.address}" placeholder="请输入标题" name="address" required="required">
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td class="title">是否置顶：</td>
+                <td style="text-align:left;line-height: 34px;" colspan="5">
+                    <input type="radio" name="is_top" value="0" {if $info.is_top == 0}checked="checked"{/if}/>&nbsp;&nbsp;否&nbsp;&nbsp;
+                    <input type="radio" name="is_top" value="1" {if $info.is_top == 1}checked="checked"{/if}/>&nbsp;&nbsp;是&nbsp;&nbsp;
+                    <input type="text" name="top_end_date" style="width: 60%;{if $info.is_top == 0}display:none{/if}" class="input-text datepicker" placeholder="置顶到期时间" value="{$info.top_end_date_text}" autocomplete="off"/>
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td class="title">图片：</td>
+                <td colspan="5" height="100">
+                    <div class="uploader-thum-container" style="">
+                        <div id="imgDiv" style="">
+                            {volist name="info.imageList" id="vo"}
+                                <div style="float:left;width:33%;"><img src="{$vo}" style="width: 82%;margin-bottom: 5px;" />
+                                    <button class="btn btn-default radius ml-10" type="button" onclick="removeFile(this)">删除</button>
+                                </div>
+                            {/volist}
+                        </div>
+                        <div id="fileList" class="uploader-list"></div>
+                        <br/>
+                        <div id="filePicker" style="display:block;">选择图片</div>
+                        <div style="float: left;width: 100%;color: #cdcdcd;text-align: left;">最多上传三张图片</div>
+                    </div>
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td class="title">招聘简介：</td>
+                <td colspan="5" height="100">
+                    <textarea cols="100" rows="5" name="introduction" class="textarea" required="required">{$info.introduction}</textarea>
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td class="title">招聘内容：</td>
+                <td colspan="5" height="100">
+                    <textarea cols="100" rows="5" name="content" class="textarea" required="required">{$info.content}</textarea>
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td class="title">后台管理员：</td>
+                <td colspan="5">
+                    <select class="select" name="add_uid">
+                        {volist name="klAdmins" id="vo"}
+                        <option value="{$vo.id}" {if $info.add_uid == $vo.id}selected="selected"{/if}>{$vo.user_number}</option>
+                        {/volist}
+                    </select>
+                </td>
+            </tr>
+            <tr class="text-c" >
+                <td colspan="6">
+                    <input type="hidden" id="images" name="images" value="{$info.images}" />
+                    <input type="submit" id="submit-btn" value="提交" class="btn btn-primary radius" style="width:35%;">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </form>
+</div>
+{/block}
+{block name="js"}
+<script type="text/javascript" src="/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="/lib/webuploader/0.1.5/webuploader.min.js"></script>
+<!--<script type="text/javascript" src="/lib/ueditor/1.4.3/ueditor.config.js"></script>-->
+<!--<script type="text/javascript" src="/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>-->
+<!--<script type="text/javascript" src="/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>-->
+<script type="text/javascript">
+
+    function removeFile(obj){
+        $(obj).parent().remove();
+        var image_arr = [];
+        $('#imgDiv img').each(function(i){
+            image_arr.push($(this).attr('src'));
+        });
+        $('#images').val(image_arr.join(','));
+    }
+
+    $(function(){
+        $('.skin-minimal input').iCheck({
+            checkboxClass: 'icheckbox-blue',
+            radioClass: 'iradio-blue',
+            increaseArea: '20%'
+        });
+        //表单验证
+        $("#edit").validate({
+            onkeyup:false,
+            focusCleanup:true,
+            success:"valid",
+            submitHandler:function(form){
+                if($('input[name="nature[]"]:checked').length == 0){
+                    layer.msg('请选择工作性质！');
+                    return false;
+                }
+                $(form).ajaxSubmit(function (res) {
+                    if(res.status == 'y'){
+                        setTimeout(function(){
+                            parent.window.location.reload();
+                        },1000);
+                    }else{
+                        layer.msg(res.info);
+                    }
+                });
+            }
+        });
+
+        var $list = $("#fileList");
+        var state = "pending";
+        var fileIds = [];
+
+        var uploader = WebUploader.create({
+            auto: true,
+            swf: '/lib/webuploader/0.1.5/Uploader.swf',
+
+            // 文件接收服务端。
+            server: "{:url('ajax/upload', ['model'=>'maket','thumb'=>1,'thumb_width1'=>200,'thumb_height1'=>200,'thumb_width2'=>750,'thumb_height2'=>750,'water'=>1])}",
+
+            // 选择文件的按钮。可选。
+            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+            pick: {
+                id:'#filePicker',
+                multiple:false
+            },
+            // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+            resize: false,
+            // 只允许选择图片文件。
+            accept: {
+                title: 'Images',
+                extensions: 'gif,jpg,jpeg,bmp,png',
+                mimeTypes: 'image/*'
+            }
+        });
+        uploader.on( 'fileQueued', function( file ) {
+            var $li = $(
+                '<div id="' + file.id + '" class="item">' +
+                '<div class="pic-box"><img></div>'+
+                '<div class="info">' + file.name + '</div>' +
+                '<p class="state">等待上传...</p>'+
+                '</div>'
+                ),
+                $img = $li.find('img');
+            $list.append( $li );
+        });
+        // // 文件上传过程中创建进度条实时显示。
+        uploader.on( 'uploadProgress', function( file, percentage ) {
+            var $li = $( '#'+file.id ),
+                $percent = $li.find('.progress-box .sr-only');
+
+            // 避免重复创建
+            if ( !$percent.length ) {
+                $percent = $('<div class="progress-box"><span class="progress-bar radius"><span class="sr-only" style="width:0%"></span></span></div>').appendTo( $li ).find('.sr-only');
+            }
+            // $li.find(".state").text("上传中");
+            $percent.css( 'width', percentage * 100 + '%' );
+        });
+        //
+        // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+        uploader.on( 'uploadSuccess', function( file, response ) {
+            fileIds.push(file.id);
+            if(response.code == 1){
+                //$("#filename").val(response.filename);
+                layer.msg(response.info,{icon: 6,time:1000}, function(){
+                    //window.location.reload();
+                    var oldVal = $('#images').val();
+                    var newVal = oldVal ?  (oldVal + "," + response.filename) : response.filename;
+                    $('#images').val(newVal);
+                    $('#imgDiv').html($('#imgDiv').html() + '<div style="float:left;width:33%;"><img src="'+response.filename+'" style="width: 82%;margin-bottom: 5px;" /><br><button class="btn btn-default radius ml-10" type="button" onclick="removeFile(this)">删除</button></div>');
+                });
+                for(var i in fileIds){
+                    uploader.removeFile( fileIds[i],true );
+                    $("#"+fileIds[i]).remove();
+                    fileIds.pop();
+                }
+            }
+            else {
+                layer.msg(response.info,{icon: 5,time:1000});
+            }
+            // $( '#'+file.id ).addClass('upload-state-success').find(".state").text("已上传");
+        });
+        //
+        // 文件上传失败，显示上传出错。
+        uploader.on( 'uploadError', function( file ) {
+            $( '#'+file.id ).addClass('upload-state-error').find(".state").text("上传出错");
+        });
+        //
+        // 完成上传完了，成功或者失败，先删除进度条。
+        uploader.on( 'uploadComplete', function( file ) {
+            $( '#'+file.id ).find('.progress-box').fadeOut();
+            $( '#'+file.id ).find('.state').fadeOut();
+        });
+        //城市切换
+        $("select[name='city_id']").change(function(){
+            var city_id = $(this).val();
+            var districtSelect = $("select[name='district_id']");
+            $.ajax({
+                url: '{:url("ajax/getDistrictByCityId")}',
+                type: 'get',
+                dataType: 'json',
+                data: {
+                    'city_id': city_id
+                },
+                success: function (data) {
+                    if (data.status == 'y') {
+                        if (data.info) {
+                            var option = '';
+                            $.each(data.info.districts, function(i, item){
+                                option += '<option value="' + item.id + '">' + item.name + '</option>';
+                            });
+                            option = option ? option : '<option value="">该城市无下级区域</option>';
+                            districtSelect.html(option);
+                        }
+                    } else {
+                        layer.msg('获取该城市的下级区域失败', {
+                            icon: 2,
+                            time: 1000
+                        });
+                    }
+                }
+            });
+        });
+        //会员切换
+        $('#mem_id').on('blur', function(){
+            if ($(this).val() == ''){
+                return;
+            }
+            var index = layer.load(1, {
+                shade: [0.1,'#b3b3b3'] //0.1透明度的白色背景
+            });
+            $.ajax({
+                url:'{:url("ajax/getMemberNickname")}',
+                type:'get',
+                dataType:'json',
+                data:{'mem_id':$('#mem_id').val()},
+                success:function(data){
+                    layer.close(index);
+                    if(data.status == 'y'){
+                        if (data.info){
+                            $('.nick_name_td').html(data.info.nick_name);
+                        }
+                        else {
+                            $('.nick_name_td').html('未查找到会员');
+                        }
+                    }else{
+                        layer.msg('连接服务器超时',{icon:2,time:1000});
+                    }
+                }
+            });
+        });
+        //是否置顶切换
+        $('input[name=is_top]').on('click', function () {
+            if (this.value == 1) {
+                $('input[name=top_end_date]').show();
+            } else {
+                $('input[name=top_end_date]').hide();
+                $('input[name=top_end_date]').val('');
+            }
+        });
+        $(".datepicker").datetimepicker({
+            language: "zh-cn",
+            format: "yyyy-mm-dd hh:ii",
+            autoclose: true
+        });
+    });
+</script>
+{/block}

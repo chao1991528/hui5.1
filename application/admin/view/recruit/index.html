@@ -1,0 +1,241 @@
+{extend name="base" /}
+{block name="css"}
+<link rel="stylesheet" type="text/css" href="/static/css/layui.css" />
+<style>
+    #pages{
+        display:block;
+        text-align: center;
+    }
+</style>
+{/block}
+{block name="title"}招聘列表{/block}
+{block name="main"}
+<nav class="breadcrumb">
+    <i class="Hui-iconfont">&#xe67f;</i> 首页
+    <span class="c-gray en">&gt;</span> 招聘管理
+    <span class="c-gray en">&gt;</span> 招聘列表
+    <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" >
+        <i class="Hui-iconfont">&#xe68f;</i>
+    </a>
+</nav>
+<div class="page-container">
+    <div class="text-c">
+<!--        <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button>-->
+<!--        <span class="select-box inline">-->
+
+        <form method="get" action="">
+            <div class="text-c">
+                <input type="text" name="title" class="input-text" placeholder="标题" style="width:180px;" value="{$Think.get.title}">
+                <select name="city_id" class="select select-box" style="width: 180px;">
+                    <option value="">所属城市</option>
+                    {volist name='citys' id='vo'}
+                    <option value="{$vo.id}" {if $Think.get.city_id == $vo.id}selected="selected"{/if}>{$vo.name}</option>
+                    {/volist}
+                </select>
+                <select name="category_id" class="select select-box" style="width: 180px;">
+                    <option value="">全部行业</option>
+                    {volist name='categories' id='vo'}
+                    <option value="{$vo.id}" {if $Think.get.industry_id == $vo.id}selected="selected"{/if}>{$vo.name}</option>
+                    {/volist}
+                </select>
+                <select name="is_top" class="select select-box" style="width: 180px;">
+                    <option value="-1">是否置顶</option>
+                    {volist name='isTop' id='vo'}
+                    <option value="{$key}" <?php if(isset($_GET['is_top'])):if($_GET['is_top'] == $key): echo 'selected="selected"';?><?php endif;?><?php endif;?>>{$vo}</option>
+                    {/volist}
+                </select>
+                <button class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+            </div>
+        </form>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+<!--        <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius">-->
+<!--            <i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>-->
+<!--            <a class="btn btn-primary radius" data-title="添加资讯" data-href="article-add.html" onclick="Hui_admin_tab(this)" href="javascript:;">-->
+<!--                <i class="Hui-iconfont">&#xe600;</i> 添加资讯</a>-->
+<!--        </span>-->
+        <span class="r">共有数据：<strong>{$total}</strong> 条</span>
+    </div>
+    <div class="mt-20">
+        <table class="table table-border table-bordered table-bg table-hover table-sort table-responsive">
+            <thead>
+            <tr class="text-c">
+<!--                <th width="25"><input type="checkbox" name="" value=""></th>-->
+                <th width="50">ID</th>
+                <th width="80">会员昵称</th>
+                <th width="80">标题</th>
+                <th width="80">所属城市</th>
+                <th width="80">所属行业</th>
+                <th width="80">发布图片</th>
+                <th width="80">发布内容</th>
+                <th width="80">是否置顶</th>
+                <th width="80">发布时间</th>
+                <th width="80">源地址</th>
+                <th width="80">后台管理员</th>
+                <th width="60">已上传</th>
+                <th width="120">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name='list' id='vo'}
+                <tr class="text-c">
+<!--                    <td><input type="checkbox" value="" name=""></td>-->
+                    <td>{$vo.id}</td>
+                    <td>{$vo.member.nick_name}</td>
+                    <td>{$vo.title}</td>
+                    <td>{$vo.city.name_zh}</td>
+                    <td>{$vo.industry.name}</td>
+                    <td><a href="javascript:;" onclick="showImage('{$vo.title}', '{$vo.images}')">点击预览</a></td>
+                    <td><a href="javascript:;" onclick="showContent('{$vo.title}', '{$vo.content}')">点击预览</a></td>
+                    <td>
+                        {if $vo.is_top == 0}
+                            <span class="label label-default radius">否</span>
+                            {else /}
+                            <span class="label label-success radius">是</span>
+                        {/if}
+                    </td>
+                    <td>{$vo.add_time_text}</td>
+                    <td>{$vo.source_url}</td>
+                    <td>{$vo.kaola_admin.user_number}</td>
+                    <td>{if $vo.is_uploaded == 0}
+                        <span class="label label-default radius">否</span>
+                        {else /}
+                        <span class="label label-success radius">是</span>
+                        {/if}
+                    </td>
+                    <td class="f-14 td-manage">
+                        <a style="text-decoration:none" class="ml-5" onClick="uploadToProduct(this,'{$vo.id}')" href="javascript:;" title="上传">
+                            <i class="Hui-iconfont">&#xe603;</i>
+                        </a>
+                        <a style="text-decoration:none" class="ml-5" onClick="admin_edit('编辑','{$vo.id}', 1000, 800)" href="javascript:;" title="编辑">
+                            <i class="Hui-iconfont">&#xe6df;</i>
+                        </a>
+                        <a style="text-decoration:none" class="ml-5" onClick="admin_del(this,'{$vo.id}')" href="javascript:;" title="删除">
+                            <i class="Hui-iconfont">&#xe6e2;</i>
+                        </a>
+                    </td>
+                </tr>
+            {/volist}
+            </tbody>
+        </table>
+        {$list|raw}
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script type="text/javascript" src="/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+    /*查看图片*/
+    function showImage(title, url){
+        var array = url.split(",");
+        var html = '';
+        for(var i in array){
+            html += '<image src="'+array[i]+'" style="margin-top:2px;width:100%;"><br>';
+        }
+        layer.open({
+            type: 1,
+            title: '【' + title + '】发布内容',
+            skin: 'layui-layer-rim', //加上边框
+            shadeClose: true,
+            area: ['500px', '600px'], //宽高
+            content: '<div style="text-align:center;">'+html+'</div>'
+        });
+    }
+    /*查看内容*/
+    function showContent(title, content){
+        layer.open({
+            type: 1,
+            title: '【' + title + '】发布内容',
+            skin: 'layui-layer-rim', //加上边框
+            shadeClose: true,
+            area: ['500px', '600px'], //宽高
+            content: '<div style="text-align:center;">'+content+'</div>'
+        });
+    }
+
+    /*上传至正式站*/
+    function uploadToProduct(obj,id){
+        layer.confirm('确认要上传吗？',function(index){
+            $.ajax({
+                type: 'POST',
+                url: "{:url('uploadToProduct')}" + '?id=' + id,
+                dataType: 'json',
+                success: function(data){
+                    if(data.status == 'y'){
+                        layer.msg(data.info,{icon: 1,time:1000},function(){
+                            window.location.reload();
+                        });
+                    }else{
+                        layer.msg(data.info,{icon: 5,time:1000});
+                    }
+                },
+                error:function(data) {
+                    console.log(data.msg);
+                },
+            });
+        });
+    }
+
+    /*编辑*/
+    function admin_edit(title,id,w,h){
+        url = "{:url('edit')}" + '?id=' + id;
+        layer_show(title,url,w,h);
+    }
+    /*删除*/
+    function admin_del(obj,id){
+        layer.confirm('确认要删除吗？',function(index){
+            $.ajax({
+                type: 'POST',
+                url: "{:url('delete')}" + '?id=' + id,
+                dataType: 'json',
+                success: function(data){
+                    if(data.status == 'y'){
+                        layer.msg(data.info,{icon: 1,time:1000},function(){
+                            window.location.reload();
+                        });
+                    }else{
+                        layer.msg(data.info,{icon: 5,time:1000});
+                    }
+                },
+                error:function(data) {
+                    console.log(data.msg);
+                },
+            });
+        });
+    }
+    /*城市切换*/
+    $("select[name='city_id']").change(function(){
+        var city_id = $(this).val();
+        if(city_id == ''){
+            return;
+        }
+        var categorySelect = $("select[name='category_id']");
+        $.ajax({
+            url: '{:url("ajax/marketChangeCity")}',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                'city_id': city_id
+            },
+            success: function (data) {
+                if (data.status == 'y') {
+                    if (data.info) {
+                        categorySelect.empty();
+                        var option = '';
+                        $.each(data.info.categories, function(i, item){
+                            option += '<option value="' + item.id + '">' + item.category_name + '</option>';
+                        });
+                        option = option ? '<option value="">全部分类</option>'+ option : '<option value="">该城市无招聘分类</option>';
+                        categorySelect.html(option);
+                    }
+                } else {
+                    layer.msg('获取该城市的招聘分类失败', {
+                        icon: 2,
+                        time: 1000
+                    });
+                }
+            }
+        });
+    });
+</script>
+{/block}
