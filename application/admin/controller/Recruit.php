@@ -129,7 +129,7 @@ class Recruit extends Base
     {
         $recruit = RecruitModel::where(['is_delete' => 0, 'id' => $id])->find();
         if (!$recruit) {
-            $this->error('二手信息不存在，无法删除！');
+            return json(['info' => '删除失败:二手信息不存在，无法删除！', 'status' => 'n']);
         }
         $recruit->is_delete = 1;
         $recruit->delete_time = time();
@@ -143,12 +143,12 @@ class Recruit extends Base
     public function uploadToProduct($id)
     {
         if (empty($id)) {
-            $this->error('id不能为空！');
+            return json(['info' => '上传失败:id不能为空！', 'status' => 'n']);
         }
         $recruit = db('recruit')->where('id', $id)->field('id,source_url', true)->find();
         if ($recruit) {
             if ($recruit['is_uploaded']) {
-                $this->error('已经上传过了，请勿重复上传!');
+                return json(['info' => '上传失败:已经上传过了，请勿重复上传！', 'status' => 'n']);
             } else {
                 unset($recruit['is_uploaded']);
             }

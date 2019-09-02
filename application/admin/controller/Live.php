@@ -119,7 +119,7 @@ class Live extends Base
     {
         $live = LiveModel::where(['is_delete' => 0, 'id' => $id])->find();
         if (!$live) {
-            $this->error('生活信息不存在，无法删除！');
+            return json(['info' => '删除失败:生活信息不存在，无法删除！', 'status' => 'n']);
         }
         $live->is_delete = 1;
         $live->delete_time = time();
@@ -133,7 +133,7 @@ class Live extends Base
     public function uploadToProduct($id)
     {
         if(empty($id)){
-            $this->error('id不能为空！');
+            return json(['info' => '上传失败:id不能为空！', 'status' => 'n']);
         }
         $live = db('live')->where('id', $id)->field('id,source_url,email_image', true)->where('id', $id)->find();
         if (!empty($live)) {

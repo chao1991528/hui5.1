@@ -144,7 +144,7 @@ class House extends Base
     {
         $house = HouseModel::where(['is_delete' => 0, 'id' => $id])->find();
         if (!$house) {
-            $this->error('房源信息不存在，无法删除！');
+            return json(['info' => '删除失败:房源信息不存在，无法删除！', 'status' => 'n']);
         }
         $house->is_delete = 1;
         $house->delete_time = time();
@@ -158,12 +158,12 @@ class House extends Base
     public function uploadToProduct($id)
     {
         if (empty($id)) {
-            $this->error('id不能为空！');
+            return json(['info' => '上传失败:id不能为空！', 'status' => 'n']);
         }
         $house = db('houses')->where('id', $id)->field('id,house_sn,update_time,delete_time,email_img,source_url', true)->find();
         if ($house) {
             if ($house['is_uploaded']) {
-                $this->error('已经上传过了，请勿重复上传!');
+                return json(['info' => '上传失败:已经上传过了，请勿重复上传!', 'status' => 'n']);
             } else {
                 unset($house['is_uploaded']);
             }

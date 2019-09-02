@@ -144,7 +144,7 @@ class Market extends Base
     {
         $market = MarketModel::where(['is_delete' => 0, 'id' => $id])->find();
         if (!$market) {
-            $this->error('二手信息不存在，无法删除！');
+            return json(['info' => '删除失败:二手信息不存在，无法删除！', 'status' => 'n']);
         }
         $market->is_delete = 1;
         $market->delete_time = time();
@@ -158,12 +158,12 @@ class Market extends Base
     public function uploadToProduct($id)
     {
         if (empty($id)) {
-            $this->error('id不能为空！');
+            return json(['info' => '上传失败:id不能为空！', 'status' => 'n']);
         }
         $market = db('market')->where('id', $id)->field('id,source_url', true)->find();
         if ($market) {
             if ($market['is_uploaded']) {
-                $this->error('已经上传过了，请勿重复上传!');
+                return json(['info' => '上传失败:已经上传过了，请勿重复上传！', 'status' => 'n']);
             } else {
                 unset($market['is_uploaded']);
             }

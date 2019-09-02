@@ -208,7 +208,7 @@ class News extends Base
     {
         $news = NewsModel::where(['is_delete' => 0, 'id' => $id])->find();
         if (!$news) {
-            $this->error('生活信息不存在，无法删除！');
+            return json(['info' => '删除失败:生活信息不存在，无法删除！', 'status' => 'n']);
         }
         $news->is_delete = 1;
         $news->delete_time = time();
@@ -222,7 +222,7 @@ class News extends Base
     public function uploadToProduct($id)
     {
         if(empty($id)){
-            $this->error('id不能为空！');
+            return json(['info' => '上传失败:id不能为空！', 'status' => 'n']);
         }
         $field = 'category_id,source_id,title_tag_id,news_tag_id,layout_id,type_id,news_title,news_picture,content,news_url,search_key,remark,declare_id,is_valid,is_recommend,is_hot,top_end_date,add_time,add_uid,is_applet,is_publish,publish_time,is_uploaded';
         $news = db('news')->where('id', $id)->field($field)->where('id', $id)->find();
