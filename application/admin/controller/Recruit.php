@@ -92,7 +92,10 @@ class Recruit extends Base
                 $this->error('招聘信息不存在！');
             }
             $citys = model('City')->where('is_valid', 1)->field('id,name')->select();
-            $districts = model('District')->where(['is_valid' => 1, 'city_id' => $info->city_id])->field('id,name')->select();
+            $districts = [];
+            if(!$info->city_id){
+                $districts = model('District')->where(['is_valid' => 1, 'city_id' => $info->city_id])->field('id,name')->select();
+            }
             $industries = model('RecruitIndustry')->where(['is_valid' => 1, 'is_delete' => 0])->field('id,name')->select();
             $natures = RecruitModel::getNatureList();
             $genders = RecruitModel::getGenderList();

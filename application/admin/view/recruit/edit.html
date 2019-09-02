@@ -46,6 +46,7 @@
                 <td width="120" class="title">所属城市：</td>
                 <td width="120">
                     <select class="select" name="city_id" required="required">
+                        <option value="">选择城市</option>
                         {volist name="citys" id="vo"}
                             <option value="{$vo.id}" {if $info.city_id == $vo.id}selected="selected"{/if}>{$vo.name}</option>
                         {/volist}
@@ -54,6 +55,7 @@
                 <td width="80" class="title">所属区域：</td>
                 <td width="130">
                     <select class="select" name="district_id" required="required">
+                        <option value="">选择区域</option>
                         {volist name="districts" id="vo"}
                         <option value="{$vo.id}" {if $info.district_id == $vo.id}selected="selected"{/if}>{$vo.name}</option>
                         {/volist}
